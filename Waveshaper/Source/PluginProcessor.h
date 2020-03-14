@@ -12,6 +12,9 @@
 #define GAIN_NAME "Gain"
 #define SATURATION_NAME "Saturation"
 #define SYMMETRY_NAME "Symmetry"
+#define FUNCTIONS_A_NAME "Functions_A"
+#define FUNCTIONS_B_NAME "Functions_B"
+#define CROSSFADE_NAME "Crossfade"
 
 //==============================================================================
 /**
@@ -61,9 +64,15 @@ public:
     double getGain() const;
     AudioProcessorValueTreeState& accessTreeState();
     
+   
+    
     static String paramGain;
     static String paramSaturation;
     static String paramSymmetry;
+    static String paramCrossfade;
+    static String paramTransferFunctionListA;
+    static String paramTransferFunctionListB;
+    
 
 private:
     double mainGain;
@@ -72,6 +81,8 @@ private:
     float symmetry;
     AudioProcessorValueTreeState parameters;
     TransferFunction transferFunction; // so far just one
+    
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveshaperAudioProcessor)
 };

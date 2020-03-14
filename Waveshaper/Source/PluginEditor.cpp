@@ -34,6 +34,10 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
     symmetrySlider.setSliderStyle(Slider::SliderStyle::Rotary);
     symmetrySlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
     
+    addAndMakeVisible(&crossfadeSlider);
+    crossfadeSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
+    crossfadeSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 70, 30);
+    
     // tree state attachments
     gainSliderAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(processor.accessTreeState(), WaveshaperAudioProcessor::paramGain, gainSlider));
     
@@ -41,6 +45,15 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
         WaveshaperAudioProcessor::paramSaturation, saturationSlider));
     
     symmetrySliderAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(processor.accessTreeState(), WaveshaperAudioProcessor::paramSymmetry, symmetrySlider));
+    
+    crossfadeSliderAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(processor.accessTreeState(), WaveshaperAudioProcessor::paramCrossfade, crossfadeSlider));
+    
+    functions_A_ComboAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(processor.accessTreeState(), WaveshaperAudioProcessor::paramTransferFunctionListA, functions_A_Combo));
+    
+    functions_B_ComboAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(processor.accessTreeState(), WaveshaperAudioProcessor::paramTransferFunctionListB, functions_B_Combo));
+    
+
+    
 }
 
 WaveshaperAudioProcessorEditor::~WaveshaperAudioProcessorEditor()
@@ -61,6 +74,7 @@ void WaveshaperAudioProcessorEditor::resized()
     auto box = getLocalBounds().reduced(20);
     gainSlider.setBounds(box.removeFromRight(70).removeFromBottom(120));
     saturationSlider.setBounds(box.removeFromLeft(70).removeFromBottom(120));
-    symmetrySlider.setBounds(box.removeFromLeft(70).removeFromBottom(120));
+    symmetrySlider.setBounds(box.removeFromBottom(220));
+    crossfadeSlider.setBounds(box.removeFromLeft(70).removeFromTop(120));
 }
 

@@ -30,6 +30,9 @@ private:
     Slider gainSlider;
     Slider saturationSlider;
     Slider symmetrySlider;
+    ComboBox functions_A_Combo;
+    ComboBox functions_B_Combo;
+    Slider crossfadeSlider;
     
     Label dBLabel; // do I need labels or I just use fittedText? 
 
@@ -47,4 +50,7 @@ private:
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainSliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> saturationSliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> symmetrySliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> crossfadeSliderAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> functions_A_ComboAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> functions_B_ComboAttachment;
 };

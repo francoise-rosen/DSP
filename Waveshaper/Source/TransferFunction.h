@@ -4,21 +4,7 @@
     TransferFunction.h
     Created: 5 Feb 2020 8:13:32pm
     Author:  syfo_dias
- 
- https://www.musicdsp.org/en/latest/Effects/42-soft-saturation.html
- 
-    1. Make TAHN, soft clipping and COS work
-    2. How to implement it in plugin processor? - done, but add parameters
-    2.5 More transfer functions (Book)
-    3. DCblock!
-    4. LPG
-    5. LPF before shaping
-    6. Oversampling
-    
-    Phase 2
-    1. Combination of transfer function (parallel and sequential)
 
-  ==============================================================================
 */
 
 #pragma once
@@ -31,7 +17,6 @@
 // index range 1.0 - 9.0
 
 // write a scale function
-
 
 // do I need these const here?
 template <typename T>
@@ -83,7 +68,6 @@ inline double sgn(double inpt)
 // packed in namespace as it is
 // Class has been made considering some future inprovements, like adding table lookups, using 2 transfer functions for crossfade etc.
 
-
 // template this class so float and doubles can be used
 class TransferFunction
 {
@@ -102,8 +86,10 @@ public:
         cos,
         sfdSine,
         softClipper,
-        softClipperCascade3
+        softClipperCascade3,
+        numFunctions
     };
+    
 
     
     forcedinline double halfCos(double& x, double index, double sym=0) noexcept
@@ -205,10 +191,12 @@ public:
         
         return sample;
     }
+    
 
 private:
     double min;
     double max;
     Functions currentFunction;
+
     
 };

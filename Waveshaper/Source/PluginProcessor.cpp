@@ -12,9 +12,13 @@
 #include "PluginEditor.h"
 //==============================================================================
 
+// PARAMETER IDs
 String WaveshaperAudioProcessor::paramGain{"gain"};
 String WaveshaperAudioProcessor::paramSaturation{"saturation"};
 String WaveshaperAudioProcessor::paramSymmetry{"symmetry"};
+String WaveshaperAudioProcessor::paramCrossfade{"crossfade"};
+String WaveshaperAudioProcessor::paramTransferFunctionListA{"tfA"};
+String WaveshaperAudioProcessor::paramTransferFunctionListB{"tfB"};
 
 //==============================================================================
 WaveshaperAudioProcessor::WaveshaperAudioProcessor()
@@ -50,7 +54,21 @@ WaveshaperAudioProcessor::WaveshaperAudioProcessor()
                                                              -1.0f,
                                                              1.0f,
                                                              0.0f
-                                                             )
+                                                             ),
+                      std::make_unique<AudioParameterFloat> (paramCrossfade,
+                                                             CROSSFADE_NAME,
+                                                             -48.0f,
+                                                             48.0f,
+                                                             0.0f
+                                                             ),
+                      std::make_unique<AudioParameterChoice> (paramTransferFunctionListA,
+                                                              FUNCTIONS_A_NAME,
+                                                              StringArray{"SFDTanh", "SFDcos", "SFDsine" "SFDclip", "SFDClipCascade"},
+                                                              1),
+                      std::make_unique<AudioParameterChoice> (paramTransferFunctionListB,
+                                                              FUNCTIONS_B_NAME,
+                                                              StringArray{"SFDTanh", "SFDcos", "SFDsine" "SFDclip", "SFDClipCascade"},
+                                                              1)
                   }
                   )
 
@@ -196,7 +214,7 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     auto localTargetGain = targetGain;
     saturation = *parameters.getRawParameterValue(paramSaturation);
     symmetry = *parameters.getRawParameterValue(paramSymmetry);
-   // I'M here - flip the for loops? 
+
     
     if ( localTargetGain != mainGain)
     {
@@ -211,8 +229,7 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
             {
                 localMainGain += gainRateOfChange;
                 double sample = buffer.getSample(channel, i);
-                channelData[i] = transferFunction.transform(TransferFunction::Functions::sfdSine, sample, saturation, symmetry) * (double)Decibels::decibelsToGain(localMainGain);
-                //channelData[sample] = std::tanh(unit);
+                channelData[i] = transferFunction.transform(TransferFunction::Functions::sfdSine, sample, saturation, symmetry) * Decibels::decibelsToGain(localMainGain);
             }
         }
         mainGain = localTargetGain;
@@ -227,7 +244,7 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
                // channelData[sample] = buffer.getSample(channel, sample) * Decibels::decibelsToGain(mainGain);
                 double sample = buffer.getSample(channel, i);
                 channelData[i] = transferFunction.transform(TransferFunction::Functions::sfdSine, sample, saturation, symmetry) * Decibels::decibelsToGain(mainGain);
-                //channelData[sample] = std::tanh(unit);
+             
             }
             
         }
@@ -277,6 +294,7 @@ double WaveshaperAudioProcessor::getGain() const
 {
     return mainGain;
 }
+                      
 
 AudioProcessorValueTreeState& WaveshaperAudioProcessor::accessTreeState()
 {
