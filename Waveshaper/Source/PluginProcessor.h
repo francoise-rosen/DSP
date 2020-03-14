@@ -73,6 +73,8 @@ public:
     static String paramTransferFunctionListA;
     static String paramTransferFunctionListB;
     
+    static StringArray functions;
+    
 
 private:
     double mainGain;

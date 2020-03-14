@@ -38,6 +38,11 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
     crossfadeSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
     crossfadeSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 70, 30);
     
+    addAndMakeVisible(&functions_A_Combo);
+    addAndMakeVisible(&functions_B_Combo);
+    
+    fillCombos();
+    
     // tree state attachments
     gainSliderAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(processor.accessTreeState(), WaveshaperAudioProcessor::paramGain, gainSlider));
     
@@ -58,9 +63,21 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
 
 WaveshaperAudioProcessorEditor::~WaveshaperAudioProcessorEditor()
 {
+    
 }
 
 //==============================================================================
+
+void WaveshaperAudioProcessorEditor::fillCombos()
+{
+    int comboSize = WaveshaperAudioProcessor::functions.size();
+    for(int i = 0; i < comboSize; ++i)
+    {
+        functions_A_Combo.addItem(WaveshaperAudioProcessor::functions[i], i+1);
+        functions_B_Combo.addItem(WaveshaperAudioProcessor::functions[i], i+1);
+    }
+        
+}
 void WaveshaperAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
@@ -74,7 +91,9 @@ void WaveshaperAudioProcessorEditor::resized()
     auto box = getLocalBounds().reduced(20);
     gainSlider.setBounds(box.removeFromRight(70).removeFromBottom(120));
     saturationSlider.setBounds(box.removeFromLeft(70).removeFromBottom(120));
-    symmetrySlider.setBounds(box.removeFromBottom(220));
+    symmetrySlider.setBounds(box.removeFromBottom(120));
     crossfadeSlider.setBounds(box.removeFromLeft(70).removeFromTop(120));
+    functions_A_Combo.setBounds(10, 10, getWidth()/3, 50);
+    functions_B_Combo.setBounds(getWidth()/2, 10, getWidth()/3, 50);
 }
 

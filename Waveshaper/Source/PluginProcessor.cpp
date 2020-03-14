@@ -20,6 +20,8 @@ String WaveshaperAudioProcessor::paramCrossfade{"crossfade"};
 String WaveshaperAudioProcessor::paramTransferFunctionListA{"tfA"};
 String WaveshaperAudioProcessor::paramTransferFunctionListB{"tfB"};
 
+StringArray WaveshaperAudioProcessor::functions{"SFDTanh", "SFDcos", "SFDsine", "SFDclip", "SFDClipCascade"};
+
 //==============================================================================
 WaveshaperAudioProcessor::WaveshaperAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -57,18 +59,18 @@ WaveshaperAudioProcessor::WaveshaperAudioProcessor()
                                                              ),
                       std::make_unique<AudioParameterFloat> (paramCrossfade,
                                                              CROSSFADE_NAME,
-                                                             -48.0f,
-                                                             48.0f,
-                                                             0.0f
+                                                             0.0f,
+                                                             1.0f,
+                                                             0.5f
                                                              ),
                       std::make_unique<AudioParameterChoice> (paramTransferFunctionListA,
                                                               FUNCTIONS_A_NAME,
-                                                              StringArray{"SFDTanh", "SFDcos", "SFDsine" "SFDclip", "SFDClipCascade"},
-                                                              1),
+                                                              functions,
+                                                              0),
                       std::make_unique<AudioParameterChoice> (paramTransferFunctionListB,
                                                               FUNCTIONS_B_NAME,
-                                                              StringArray{"SFDTanh", "SFDcos", "SFDsine" "SFDclip", "SFDClipCascade"},
-                                                              1)
+                                                              functions,
+                                                              0)
                   }
                   )
 

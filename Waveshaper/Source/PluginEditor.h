@@ -21,6 +21,7 @@ public:
     ~WaveshaperAudioProcessorEditor();
 
     //==============================================================================
+    void fillCombos();
     void paint (Graphics&) override;
     void resized() override;
     
