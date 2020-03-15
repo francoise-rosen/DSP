@@ -19,6 +19,10 @@
 //==============================================================================
 /**
 */
+
+template <typename T>
+T mix(T leftinput, T rightinput, T balance);
+
 class WaveshaperAudioProcessor  : public AudioProcessor
 {
 public:
@@ -81,8 +85,12 @@ private:
     double targetGain;
     float saturation;
     float symmetry;
+    float crossfade;
+    float choiceA;
+    float choiceB;
     AudioProcessorValueTreeState parameters;
-    TransferFunction transferFunction; // so far just one
+    TransferFunction transferFunction_A; // so far just one
+    TransferFunction transferFunction_B;
     
     
     //==============================================================================

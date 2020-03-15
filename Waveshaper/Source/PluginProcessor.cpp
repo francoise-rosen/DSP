@@ -23,6 +23,14 @@ String WaveshaperAudioProcessor::paramTransferFunctionListB{"tfB"};
 StringArray WaveshaperAudioProcessor::functions{"SFDTanh", "SFDcos", "SFDsine", "SFDclip", "SFDClipCascade"};
 
 //==============================================================================
+
+template <typename T>
+T mix(T leftinput, T rightinput, T balance)
+{
+    return leftinput * balance + rightinput * (1 - balance);
+}
+
+//==============================================================================
 WaveshaperAudioProcessor::WaveshaperAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
@@ -149,13 +157,11 @@ void WaveshaperAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     mainGain = *parameters.getRawParameterValue(paramGain);
     saturation = *parameters.getRawParameterValue(paramSaturation);
     symmetry = *parameters.getRawParameterValue(paramSymmetry);
-    String msg;
-    msg << "mainGain in prepare to play: " << String(mainGain);
-    std::cout << msg << '\n';
-    String msg2;
-    msg2 << "target gain here " << String(targetGain);
-    std::cout << msg2 << '\n';
-    targetGain = mainGain;
+    crossfade = *parameters.getRawParameterValue(paramCrossfade);
+   // choiceA = *parameters.getRawParameterValue(paramTransferFunctionListA);
+    //choiceB = *parameters.getRawParameterValue(paramTransferFunctionListB);
+    
+
 }
 
 void WaveshaperAudioProcessor::releaseResources()
@@ -195,27 +201,16 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-        
-   // auto localTargetGain = targetGain;
     targetGain = *parameters.getRawParameterValue(paramGain);
     auto localTargetGain = targetGain;
     saturation = *parameters.getRawParameterValue(paramSaturation);
     symmetry = *parameters.getRawParameterValue(paramSymmetry);
+    crossfade = *parameters.getRawParameterValue(paramCrossfade);
+//    choiceA = *parameters.getRawParameterValue(paramTransferFunctionListA);
+//    choiceB = *parameters.getRawParameterValue(paramTransferFunctionListB);
 
     
     if ( localTargetGain != mainGain)
@@ -231,7 +226,9 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
             {
                 localMainGain += gainRateOfChange;
                 double sample = buffer.getSample(channel, i);
-                channelData[i] = transferFunction.transform(TransferFunction::Functions::sfdSine, sample, saturation, symmetry) * Decibels::decibelsToGain(localMainGain);
+                double a = transferFunction_A.transform(TransferFunction::Functions::softClipperCascade3, sample, saturation, symmetry);
+                double b = transferFunction_B.transform(TransferFunction::Functions::softClipper, sample, saturation, symmetry);
+                channelData[i] = mix(a, b, (double)crossfade) * Decibels::decibelsToGain(localMainGain);
             }
         }
         mainGain = localTargetGain;
@@ -245,7 +242,9 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
             {
                // channelData[sample] = buffer.getSample(channel, sample) * Decibels::decibelsToGain(mainGain);
                 double sample = buffer.getSample(channel, i);
-                channelData[i] = transferFunction.transform(TransferFunction::Functions::sfdSine, sample, saturation, symmetry) * Decibels::decibelsToGain(mainGain);
+                double a = transferFunction_A.transform(TransferFunction::Functions::softClipperCascade3, sample, saturation, symmetry);
+                double b = transferFunction_B.transform(TransferFunction::Functions::softClipper, sample, saturation, symmetry);
+                channelData[i] = mix(a, b, (double)crossfade) * Decibels::decibelsToGain(mainGain);
              
             }
             
@@ -267,15 +266,12 @@ AudioProcessorEditor* WaveshaperAudioProcessor::createEditor()
 //==============================================================================
 void WaveshaperAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+
 }
 
 void WaveshaperAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+
 }
 
 //==============================================================================

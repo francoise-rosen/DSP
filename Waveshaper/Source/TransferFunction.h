@@ -14,11 +14,6 @@
 #define MAXRANGE 1.0
 #define HALFPI MathConstants<double>::halfPi
 
-// index range 1.0 - 9.0
-
-// write a scale function
-
-// do I need these const here?
 template <typename T>
 T linearScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax)
 {
@@ -39,7 +34,7 @@ T expScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const 
     // expFactor in range (0, 1) will produce logarithmic growth
     // expFactor 1 is simple linearScale;
     jassert(expFactor >= 0);
-    jassert(valueToScale >= 0); // we don't need negative numbers here (problems woth sqrt())
+    jassert(valueToScale >= 0); // we don't need negative numbers here
     
     T value = valueToScale;
     if(expFactor == static_cast<T>(1)) return linearScale(valueToScale, inMin, inMax, outMin, outMax);
@@ -64,15 +59,10 @@ inline double sgn(double inpt)
     return (inpt >= 0) ? 1 : -1;
 }
 
-// There's no real need for a class in this current state of the plugin, functions could have been simply
-// packed in namespace as it is
-// Class has been made considering some future inprovements, like adding table lookups, using 2 transfer functions for crossfade etc.
-
-// template this class so float and doubles can be used
 class TransferFunction
 {
 public:
-    // current version uses just 0 - 1 range of modulation
+    
     TransferFunction()
     :min(MIN), // no modulation
     max(MAX),// max modulation
@@ -108,7 +98,7 @@ public:
     {
         index = expScale(index, min, max, 0.1, 10.0, 4.0);
         double sample = linearScale(x, MINRANGE, MAXRANGE, -HALFPI, HALFPI);
-        // check gen for coefs, how to scale index?
+
         sample = std::sin(
                           sample + std::sin(
                                             sample * index + sym * std::cos (
@@ -119,7 +109,7 @@ public:
         return sample;
     }
     
-    // TransferFunction(double& signalToTransfer, double index, TransferFunction::functions::function)
+
     forcedinline double sfdtanh(double& x, double index, double sym=1) noexcept
     {
         // processing
@@ -139,10 +129,11 @@ public:
     // use static?
     forcedinline double sfdClip(double x, double index, double sym=1) noexcept
     {
-        // normalise index of modulation
+        
+        index = expScale(index, min, max, 0.75, 2.0, 3.0);
         double sample = x * index;
         if(std::abs(sample) > 1) sample = sgn(sample) * 2/3;
-        if(std::abs(sample) <= 1) sample -= std::pow(sample, 3) / 3;
+        if(std::abs(sample) <= 1) sample -= (std::pow(sample, 3) / 3); // wrong for negative values?
         
         // normalise
         sample *= 3 / 2;
@@ -171,18 +162,23 @@ public:
         {
             case tanh:
                 sample = sfdtanh(x, index, sym);
+                std::cout << "tanh called\n";
                 break;
             case cos:
                 sample = halfCos(x, index, sym);
+                std::cout << "cos called\n";
                 break;
             case sfdSine:
                 sample = sfdsine(x, index, sym);
+                std::cout << "sine called\n";
                 break;
             case softClipper:
                 sample = sfdClip(x, index, sym);
+                std::cout << "clip called\n";
                 break;
             case softClipperCascade3:
                 sample = sfdClipCascade3f(x, index, sym);
+                std::cout << "clip cascade called\n";
                 break;
             default:
                 return x;

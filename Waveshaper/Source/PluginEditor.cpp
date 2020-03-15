@@ -17,7 +17,7 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
     // upon startup read the value off the processor?
 {
 
-    setSize (400, 250);
+    setSize (500, 250);
     addAndMakeVisible(&gainSlider);
     gainSlider.setSliderStyle(Slider::SliderStyle::Rotary);
     gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 40);
@@ -92,7 +92,7 @@ void WaveshaperAudioProcessorEditor::resized()
     gainSlider.setBounds(box.removeFromRight(70).removeFromBottom(120));
     saturationSlider.setBounds(box.removeFromLeft(70).removeFromBottom(120));
     symmetrySlider.setBounds(box.removeFromBottom(120));
-    crossfadeSlider.setBounds(box.removeFromLeft(70).removeFromTop(120));
+    crossfadeSlider.setBounds(box.removeFromLeft(170).removeFromTop(120));
     functions_A_Combo.setBounds(10, 10, getWidth()/3, 50);
     functions_B_Combo.setBounds(getWidth()/2, 10, getWidth()/3, 50);
 }
