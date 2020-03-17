@@ -158,8 +158,8 @@ void WaveshaperAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     saturation = *parameters.getRawParameterValue(paramSaturation);
     symmetry = *parameters.getRawParameterValue(paramSymmetry);
     crossfade = *parameters.getRawParameterValue(paramCrossfade);
-   // choiceA = *parameters.getRawParameterValue(paramTransferFunctionListA);
-    //choiceB = *parameters.getRawParameterValue(paramTransferFunctionListB);
+    choiceA = *parameters.getRawParameterValue(paramTransferFunctionListA);
+    choiceB = *parameters.getRawParameterValue(paramTransferFunctionListB);
     
 
 }
@@ -209,8 +209,8 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     saturation = *parameters.getRawParameterValue(paramSaturation);
     symmetry = *parameters.getRawParameterValue(paramSymmetry);
     crossfade = *parameters.getRawParameterValue(paramCrossfade);
-//    choiceA = *parameters.getRawParameterValue(paramTransferFunctionListA);
-//    choiceB = *parameters.getRawParameterValue(paramTransferFunctionListB);
+    choiceA = *parameters.getRawParameterValue(paramTransferFunctionListA);
+    choiceB = *parameters.getRawParameterValue(paramTransferFunctionListB);
 
     
     if ( localTargetGain != mainGain)
@@ -226,8 +226,8 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
             {
                 localMainGain += gainRateOfChange;
                 double sample = buffer.getSample(channel, i);
-                double a = transferFunction_A.transform(TransferFunction::Functions::softClipperCascade3, sample, saturation, symmetry);
-                double b = transferFunction_B.transform(TransferFunction::Functions::softClipper, sample, saturation, symmetry);
+                double a = transferFunction_A.transform(static_cast<TransferFunction::Functions>(choiceA), sample, saturation, symmetry);
+                double b = transferFunction_B.transform(static_cast<TransferFunction::Functions>(choiceB), sample, saturation, symmetry);
                 channelData[i] = mix(a, b, (double)crossfade) * Decibels::decibelsToGain(localMainGain);
             }
         }
@@ -242,8 +242,8 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
             {
                // channelData[sample] = buffer.getSample(channel, sample) * Decibels::decibelsToGain(mainGain);
                 double sample = buffer.getSample(channel, i);
-                double a = transferFunction_A.transform(TransferFunction::Functions::softClipperCascade3, sample, saturation, symmetry);
-                double b = transferFunction_B.transform(TransferFunction::Functions::softClipper, sample, saturation, symmetry);
+                double a = transferFunction_A.transform(static_cast<TransferFunction::Functions>(choiceA), sample, saturation, symmetry);
+                double b = transferFunction_B.transform(static_cast<TransferFunction::Functions>(choiceB), sample, saturation, symmetry);
                 channelData[i] = mix(a, b, (double)crossfade) * Decibels::decibelsToGain(mainGain);
              
             }

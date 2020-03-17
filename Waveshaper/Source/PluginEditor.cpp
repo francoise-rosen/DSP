@@ -14,31 +14,37 @@
 //==============================================================================
 WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
-    // upon startup read the value off the processor?
+
 {
+    
+    getLookAndFeel().setColour(Slider::trackColourId, Colours::darkorchid);
+    getLookAndFeel().setColour(Slider::thumbColourId, Colours::mistyrose);
 
     setSize (500, 250);
+    gainSlider.setName("Gain");
     addAndMakeVisible(&gainSlider);
     gainSlider.setSliderStyle(Slider::SliderStyle::Rotary);
-    gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 40);
+    gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 2);
 
-    addAndMakeVisible(&dBLabel);
-    dBLabel.setText("GAIN", dontSendNotification);
-    dBLabel.attachToComponent(&gainSlider, false);
-    
+    saturationSlider.setName("Saturation");
     addAndMakeVisible(&saturationSlider);
     saturationSlider.setSliderStyle(Slider::SliderStyle::Rotary);
-    saturationSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    saturationSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 20);
     
+    symmetrySlider.setName("Symmetry");
     addAndMakeVisible(&symmetrySlider);
     symmetrySlider.setSliderStyle(Slider::SliderStyle::Rotary);
-    symmetrySlider.setTextBoxStyle(Slider::TextBoxBelow, false, 70, 30);
+    symmetrySlider.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 20);
     
+    crossfadeSlider.setName("Crossfade");
     addAndMakeVisible(&crossfadeSlider);
     crossfadeSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
-    crossfadeSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 70, 30);
+    crossfadeSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 50, 20);
     
+    functions_A_Combo.setName("Function A");
     addAndMakeVisible(&functions_A_Combo);
+    
+    functions_B_Combo.setName("Function B");
     addAndMakeVisible(&functions_B_Combo);
     
     fillCombos();
@@ -81,18 +87,42 @@ void WaveshaperAudioProcessorEditor::fillCombos()
 void WaveshaperAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.fillAll (Colours::midnightblue.withMultipliedBrightness(0.5));
+               
+    g.setColour(Colours::cornflowerblue);
+    
+    auto labelWidth = 70;
+    
+    g.drawText("Saturation", saturationSlider.getX() + saturationSlider.getWidth()/2 - labelWidth/2, 10, labelWidth, 20,  Justification::centred);
+    g.drawText("Gain", gainSlider.getX() + gainSlider.getWidth()/2 - labelWidth/2, getHeight()/2 - labelWidth/4, labelWidth, 20, Justification::centred);
+    g.drawText("Symmetry", symmetrySlider.getX() + symmetrySlider.getWidth()/2 - labelWidth/2, 10, labelWidth, 20, Justification::centred);
+    
+    
+    
 
 }
 
 void WaveshaperAudioProcessorEditor::resized()
 {
     
-    auto box = getLocalBounds().reduced(20);
-    gainSlider.setBounds(box.removeFromRight(70).removeFromBottom(120));
-    saturationSlider.setBounds(box.removeFromLeft(70).removeFromBottom(120));
-    symmetrySlider.setBounds(box.removeFromBottom(120));
-    crossfadeSlider.setBounds(box.removeFromLeft(170).removeFromTop(120));
+    auto box = getLocalBounds();
+    auto bigKnob = box.removeFromRight(getWidth()/3);
+  
+
+    const auto smallKnobW = getWidth()/4;
+    
+    saturationSlider.setBounds(bigKnob.reduced(10,10));
+    
+    auto smallKnobsArea = box.removeFromRight(getWidth()/3);
+    
+    gainSlider.setBounds(smallKnobsArea.removeFromBottom(smallKnobW));
+    symmetrySlider.setBounds(smallKnobsArea.reduced(10));
+    
+//    auto box = getLocalBounds().reduced(20);
+//    gainSlider.setBounds(box.removeFromRight(70).removeFromBottom(120));
+//    saturationSlider.setBounds(box.removeFromLeft(70).removeFromBottom(120));
+//    symmetrySlider.setBounds(box.removeFromBottom(120));
+//    crossfadeSlider.setBounds(box.removeFromLeft(170).removeFromTop(120));
     functions_A_Combo.setBounds(10, 10, getWidth()/3, 50);
     functions_B_Combo.setBounds(getWidth()/2, 10, getWidth()/3, 50);
 }

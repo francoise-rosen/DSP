@@ -5,7 +5,6 @@
     <GROUP id="{C0726659-43BD-E8C1-6D19-5824158F4F1A}" name="Source">
       <FILE id="RJv9pO" name="TransferFunction.h" compile="0" resource="0"
             file="Source/TransferFunction.h"/>
-      <FILE id="JvH9X3" name="DecibelSlider.h" compile="0" resource="0" file="Source/DecibelSlider.h"/>
       <FILE id="GAKV65" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="llKHCd" name="PluginProcessor.h" compile="0" resource="0"

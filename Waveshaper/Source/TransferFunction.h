@@ -81,7 +81,7 @@ public:
     };
     
 
-    
+    // this one is too quiet, why?
     forcedinline double halfCos(double& x, double index, double sym=0) noexcept
     {
         double localIndex = expScale(index, min, max, 1.0, 2.0, 3.0);

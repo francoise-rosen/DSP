@@ -35,12 +35,6 @@ private:
     ComboBox functions_B_Combo;
     Slider crossfadeSlider;
     
-    Label dBLabel; // do I need labels or I just use fittedText? 
-
-    double level = 0.0;
-    
-    
-    
     WaveshaperAudioProcessor& processor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveshaperAudioProcessorEditor)
