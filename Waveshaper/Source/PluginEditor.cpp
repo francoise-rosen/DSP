@@ -20,7 +20,7 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
     getLookAndFeel().setColour(Slider::trackColourId, Colours::darkorchid);
     getLookAndFeel().setColour(Slider::thumbColourId, Colours::mistyrose);
 
-    setSize (500, 250);
+    setSize (500, 290);
     gainSlider.setName("Gain");
     addAndMakeVisible(&gainSlider);
     gainSlider.setSliderStyle(Slider::SliderStyle::Rotary);
@@ -93,9 +93,9 @@ void WaveshaperAudioProcessorEditor::paint (Graphics& g)
     
     auto labelWidth = 70;
     
-    g.drawText("Saturation", saturationSlider.getX() + saturationSlider.getWidth()/2 - labelWidth/2, 10, labelWidth, 20,  Justification::centred);
-    g.drawText("Gain", gainSlider.getX() + gainSlider.getWidth()/2 - labelWidth/2, getHeight()/2 - labelWidth/4, labelWidth, 20, Justification::centred);
-    g.drawText("Symmetry", symmetrySlider.getX() + symmetrySlider.getWidth()/2 - labelWidth/2, 10, labelWidth, 20, Justification::centred);
+    g.drawText("Saturation", saturationSlider.getX() + saturationSlider.getWidth()/2 - labelWidth/2, gap, labelWidth, 20,  Justification::centred);
+    g.drawText("Gain", gainSlider.getX() + gainSlider.getWidth()/2 - labelWidth/2, gainSlider.getY() - labelWidth - gap, labelWidth, 20, Justification::centred);
+    g.drawText("Symmetry", symmetrySlider.getX() + symmetrySlider.getWidth()/2 - labelWidth/2, getHeight()/1.75 - labelWidth/4 + gap, labelWidth, 20, Justification::centred);
     
     
     
@@ -105,25 +105,28 @@ void WaveshaperAudioProcessorEditor::paint (Graphics& g)
 void WaveshaperAudioProcessorEditor::resized()
 {
     
-    auto box = getLocalBounds();
-    auto bigKnob = box.removeFromRight(getWidth()/3);
-  
-
-    const auto smallKnobW = getWidth()/4;
+//    auto box = getLocalBounds();
+//    auto bigKnob = box.removeFromRight(getWidth()/3);
+//
+//
+//    const auto smallKnobW = getWidth()/4;
+//
+//    saturationSlider.setBounds(bigKnob.reduced(10,10));
+//
+//    auto smallKnobsArea = box.removeFromRight(getWidth()/3);
+//
+//    gainSlider.setBounds(smallKnobsArea.removeFromBottom(smallKnobW));
+//    symmetrySlider.setBounds(smallKnobsArea.reduced(10));
+//
+//    functions_A_Combo.setBounds(10, 10, getWidth()/3, 50);
+//    functions_B_Combo.setBounds(getWidth()/2, 10, getWidth()/3, 50);
     
-    saturationSlider.setBounds(bigKnob.reduced(10,10));
+    auto box = getLocalBounds().reduced(gap);
+    auto modArea = getLocalBounds().removeFromLeft(getWidth()/4);
+    saturationSlider.setBounds(modArea.removeFromTop(getHeight()/1.75).reduced(gap));
+    symmetrySlider.setBounds(modArea.reduced(gap));
+    gainSlider.setBounds(box.removeFromRight(getWidth()/4).removeFromBottom(getHeight()/2).reduced(10));
     
-    auto smallKnobsArea = box.removeFromRight(getWidth()/3);
     
-    gainSlider.setBounds(smallKnobsArea.removeFromBottom(smallKnobW));
-    symmetrySlider.setBounds(smallKnobsArea.reduced(10));
-    
-//    auto box = getLocalBounds().reduced(20);
-//    gainSlider.setBounds(box.removeFromRight(70).removeFromBottom(120));
-//    saturationSlider.setBounds(box.removeFromLeft(70).removeFromBottom(120));
-//    symmetrySlider.setBounds(box.removeFromBottom(120));
-//    crossfadeSlider.setBounds(box.removeFromLeft(170).removeFromTop(120));
-    functions_A_Combo.setBounds(10, 10, getWidth()/3, 50);
-    functions_B_Combo.setBounds(getWidth()/2, 10, getWidth()/3, 50);
 }
 
