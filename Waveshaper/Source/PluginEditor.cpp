@@ -24,7 +24,7 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
     gainSlider.setName("Gain");
     addAndMakeVisible(&gainSlider);
     gainSlider.setSliderStyle(Slider::SliderStyle::Rotary);
-    gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 2);
+    gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 20);
 
     saturationSlider.setName("Saturation");
     addAndMakeVisible(&saturationSlider);
@@ -39,7 +39,7 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
     crossfadeSlider.setName("Crossfade");
     addAndMakeVisible(&crossfadeSlider);
     crossfadeSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
-    crossfadeSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 50, 20);
+    crossfadeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 75, 20);
     
     functions_A_Combo.setName("Function A");
     addAndMakeVisible(&functions_A_Combo);
@@ -86,17 +86,30 @@ void WaveshaperAudioProcessorEditor::fillCombos()
 }
 void WaveshaperAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (Colours::midnightblue.withMultipliedBrightness(0.5));
+  
+    g.fillAll (Colours::midnightblue.withMultipliedBrightness(0.7));
                
     g.setColour(Colours::cornflowerblue);
     
     auto labelWidth = 70;
     
     g.drawText("Saturation", saturationSlider.getX() + saturationSlider.getWidth()/2 - labelWidth/2, gap, labelWidth, 20,  Justification::centred);
-    g.drawText("Gain", gainSlider.getX() + gainSlider.getWidth()/2 - labelWidth/2, gainSlider.getY() - labelWidth - gap, labelWidth, 20, Justification::centred);
     g.drawText("Symmetry", symmetrySlider.getX() + symmetrySlider.getWidth()/2 - labelWidth/2, getHeight()/1.75 - labelWidth/4 + gap, labelWidth, 20, Justification::centred);
+    g.drawText("Gain", gainSlider.getX() + gainSlider.getWidth()/2 - labelWidth/2, gainSlider.getY() - labelWidth/4, labelWidth, 20, Justification::centred);
     
+    g.setColour(Colours::yellow);
+    
+    Rectangle<float> area (gap, gap, getWidth()/4, getHeight() - gap - gap);
+    area.withTrimmedLeft(10);
+    g.drawRect(area);
+    
+    g.setColour(Colours::greenyellow);
+    auto box = getLocalBounds().reduced(gap);
+    g.drawRect(box);
+    
+    g.setColour(Colours::yellowgreen);
+    auto crossArea = getLocalBounds().removeFromTop(getHeight()/2).removeFromRight(getWidth() * 3 / 4).reduced(gap);
+    g.drawRect(crossArea);
     
     
 
@@ -105,27 +118,21 @@ void WaveshaperAudioProcessorEditor::paint (Graphics& g)
 void WaveshaperAudioProcessorEditor::resized()
 {
     
-//    auto box = getLocalBounds();
-//    auto bigKnob = box.removeFromRight(getWidth()/3);
-//
-//
-//    const auto smallKnobW = getWidth()/4;
-//
-//    saturationSlider.setBounds(bigKnob.reduced(10,10));
-//
-//    auto smallKnobsArea = box.removeFromRight(getWidth()/3);
-//
-//    gainSlider.setBounds(smallKnobsArea.removeFromBottom(smallKnobW));
-//    symmetrySlider.setBounds(smallKnobsArea.reduced(10));
-//
-//    functions_A_Combo.setBounds(10, 10, getWidth()/3, 50);
-//    functions_B_Combo.setBounds(getWidth()/2, 10, getWidth()/3, 50);
-    
-    auto box = getLocalBounds().reduced(gap);
+    auto gainArea = getLocalBounds().removeFromRight(getWidth()/4).removeFromBottom(getHeight()/2);
     auto modArea = getLocalBounds().removeFromLeft(getWidth()/4);
+    auto crossfadeArea = getLocalBounds().removeFromTop(getHeight()/2).removeFromRight(getWidth() * 3 / 4);
+    
+    
     saturationSlider.setBounds(modArea.removeFromTop(getHeight()/1.75).reduced(gap));
     symmetrySlider.setBounds(modArea.reduced(gap));
-    gainSlider.setBounds(box.removeFromRight(getWidth()/4).removeFromBottom(getHeight()/2).reduced(10));
+    
+    gainSlider.setBounds(gainArea.reduced(20));
+    
+    crossfadeSlider.setBounds(crossfadeArea.removeFromTop(getHeight()/4).reduced(gap));
+    
+    auto comboArea = crossfadeArea.reduced(gap, 0).removeFromTop(crossfadeArea.getHeight() * 2 / 3);
+    functions_A_Combo.setBounds(comboArea.removeFromLeft(getWidth()/4).reduced(gap));
+    functions_B_Combo.setBounds(comboArea.removeFromRight(getWidth()/4).reduced(gap));
     
     
 }

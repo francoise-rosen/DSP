@@ -35,6 +35,7 @@ private:
     ComboBox functions_B_Combo;
     Slider crossfadeSlider;
     const float gap{10};
+
     
     WaveshaperAudioProcessor& processor;
 
