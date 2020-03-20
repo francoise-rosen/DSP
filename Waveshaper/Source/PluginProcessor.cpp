@@ -27,7 +27,7 @@ StringArray WaveshaperAudioProcessor::functions{"SFDTanh", "SFDcos", "SFDsine", 
 template <typename T>
 T mix(T leftinput, T rightinput, T balance)
 {
-    return leftinput * balance + rightinput * (1 - balance);
+    return rightinput * balance + leftinput * (1 - balance);
 }
 
 //==============================================================================
