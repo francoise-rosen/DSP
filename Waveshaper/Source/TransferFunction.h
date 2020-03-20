@@ -130,7 +130,7 @@ public:
     forcedinline double sfdClip(double x, double index, double sym=1) noexcept
     {
         
-        index = expScale(index, min, max, 0.75, 2.0, 3.0);
+        index = expScale(index, min, max, 0.75, 1.25, 0.75);
         double sample = x * index;
         if(std::abs(sample) > 1) sample = sgn(sample) * 2/3;
         if(std::abs(sample) <= 1) sample -= (std::pow(sample, 3) / 3); // wrong for negative values?
