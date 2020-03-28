@@ -1,35 +1,27 @@
 /*
   ==============================================================================
 
+    This file was auto-generated!
+
+    It contains the basic framework code for a JUCE plugin processor.
 
   ==============================================================================
 */
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "TransferFunction.h"
+#include <JuceHeader.h>
 #include "DCblock.h"
-#define GAIN_NAME "Gain"
-#define SATURATION_NAME "Saturation"
-#define SYMMETRY_NAME "Symmetry"
-#define FUNCTIONS_A_NAME "Functions_A"
-#define FUNCTIONS_B_NAME "Functions_B"
-#define CROSSFADE_NAME "Crossfade"
 
 //==============================================================================
 /**
 */
-
-template <typename T>
-T mix(T leftinput, T rightinput, T balance);
-
-class WaveshaperAudioProcessor  : public AudioProcessor
+class DcblockerAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    WaveshaperAudioProcessor();
-    ~WaveshaperAudioProcessor();
+    DcblockerAudioProcessor();
+    ~DcblockerAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -64,38 +56,12 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    //===============================================================================
-    void setGain(double);
-    double getGain() const;
     AudioProcessorValueTreeState& accessTreeState();
-    
-   
-    
-    static String paramGain;
-    static String paramSaturation;
-    static String paramSymmetry;
-    static String paramCrossfade;
-    static String paramTransferFunctionListA;
-    static String paramTransferFunctionListB;
-    
-    static StringArray functions;
-    
 
 private:
-    double mainGain;
-    double targetGain;
-    float saturation;
-    float symmetry;
-    float crossfade;
-    float choiceA;
-    float choiceB;
-    AudioProcessorValueTreeState parameters;
-    TransferFunction transferFunction_A; // so far just one
-    TransferFunction transferFunction_B;
-    
-    OwnedArray<DCblock> dcblock;
-    
-    
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveshaperAudioProcessor)
+    AudioProcessorValueTreeState parameters;
+    OwnedArray<DCblock> filter; // so far like this
+    double dcblockPole;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DcblockerAudioProcessor)
 };

@@ -14,50 +14,17 @@
 #define MAXRANGE 1.0
 #define HALFPI MathConstants<double>::halfPi
 
-template <typename T>
-T linearScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax)
-{
-    T value;
-    jassert(inMin < inMax);
-    if(outMin == outMax) return outMin;
-    
-    const T factor = (outMax - outMin) / (inMax - inMin);
-    value = factor * (valueToScale - inMin) + outMin;
-    
-    return value;
-}
-
-template<typename T>
-T expScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax, const T expFactor)
-{
-    // expFactor in range (1, n) will produce exponential growth
-    // expFactor in range (0, 1) will produce logarithmic growth
-    // expFactor 1 is simple linearScale;
-    jassert(expFactor >= 0);
-    jassert(valueToScale >= 0); // we don't need negative numbers here
-    
-    T value = valueToScale;
-    if(expFactor == static_cast<T>(1)) return linearScale(valueToScale, inMin, inMax, outMin, outMax);
-    
-    // assume the input range is 0 - 1 (otherwise we may need to scale it first
-    if(!(inMin == static_cast<T>(MIN) && inMax == static_cast<T>(MAX)))
-    {
-        T localMin = static_cast<T>(MIN);
-        T localMax = static_cast<T>(MAX);
-        value = linearScale(value, inMin, inMax, localMin, localMax);
-    }
-    
-    value = pow(value, expFactor);
-    value = linearScale(value, static_cast<T>(MIN), static_cast<T>(MAX), outMin, outMax);
-    return value;
-}
-
-
 
 inline double sgn(double inpt)
 {
     return (inpt >= 0) ? 1 : -1;
 }
+
+template <typename T>
+T linearScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax);
+
+template<typename T>
+T expScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax, const T expFactor);
 
 class TransferFunction
 {
@@ -196,3 +163,45 @@ private:
 
     
 };
+
+template <typename T>
+T linearScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax)
+{
+    T value;
+    jassert(inMin < inMax);
+    if(outMin == outMax) return outMin;
+    
+    const T factor = (outMax - outMin) / (inMax - inMin);
+    value = factor * (valueToScale - inMin) + outMin;
+    
+    return value;
+}
+
+template<typename T>
+T expScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax, const T expFactor)
+{
+    // expFactor in range (1, n) will produce exponential growth
+    // expFactor in range (0, 1) will produce logarithmic growth
+    // expFactor 1 is simple linearScale;
+    jassert(expFactor >= 0);
+    jassert(valueToScale >= 0); // we don't need negative numbers here
+    
+    T value = valueToScale;
+    if(expFactor == static_cast<T>(1)) return linearScale(valueToScale, inMin, inMax, outMin, outMax);
+    
+    // assume the input range is 0 - 1 (otherwise we may need to scale it first
+    if(!(inMin == static_cast<T>(MIN) && inMax == static_cast<T>(MAX)))
+    {
+        T localMin = static_cast<T>(MIN);
+        T localMax = static_cast<T>(MAX);
+        value = linearScale(value, inMin, inMax, localMin, localMax);
+    }
+    
+    value = pow(value, expFactor);
+    value = linearScale(value, static_cast<T>(MIN), static_cast<T>(MAX), outMin, outMax);
+    return value;
+}
+
+
+
+

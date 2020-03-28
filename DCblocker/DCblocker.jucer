@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="qTzfjD" name="Waveshaper" projectType="audioplug" jucerVersion="5.4.7">
-  <MAINGROUP id="ZlvkUf" name="Waveshaper">
-    <GROUP id="{C0726659-43BD-E8C1-6D19-5824158F4F1A}" name="Source">
-      <FILE id="S5PGIY" name="DCblock.h" compile="0" resource="0" file="Source/DCblock.h"/>
-      <FILE id="RJv9pO" name="TransferFunction.h" compile="0" resource="0"
-            file="Source/TransferFunction.h"/>
-      <FILE id="GAKV65" name="PluginProcessor.cpp" compile="1" resource="0"
+<JUCERPROJECT id="Hsl51H" name="DCblocker" projectType="audioplug" jucerVersion="5.4.7">
+  <MAINGROUP id="ZbCnGW" name="DCblocker">
+    <GROUP id="{6B005C24-DC04-CFAF-E294-9A4E5D4BEE34}" name="Source">
+      <FILE id="fnHzK4" name="DCblock.cpp" compile="1" resource="0" file="Source/DCblock.cpp"/>
+      <FILE id="VLj85s" name="DCblock.h" compile="0" resource="0" file="Source/DCblock.h"/>
+      <FILE id="sqFlCA" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="llKHCd" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="fsbUaa" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="YGl6XP" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="KroxzY" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="O70ESQ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="TGE7Io" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

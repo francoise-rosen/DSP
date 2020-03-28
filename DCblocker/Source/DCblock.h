@@ -1,4 +1,3 @@
-
 /*
   ==============================================================================
 
@@ -16,28 +15,24 @@
 
 #pragma once
 #include <JuceHeader.h>
-
+#define DCBID "DCblockID"
+#define DCBNAME "DCblockName"
 
 class DCblock
 {
 public:
-    DCblock()
-    :x{0}, y{0} {}
-
-    float process(float inputSample) noexcept
-    {
-    // oversample here?
-    float output = inputSample - x + y * pole;
-    x = inputSample; // xz-1
-    y = output;      // yz-1
-    return output;
-}
+    DCblock();
+    
+    void setPole(double& p);
+    
+    float process(float inputSample) noexcept;
     
 
 private:
+    //static constexpr double pole{0.995};
     float x;
     float y;
-    static constexpr float pole{0.997f};
+    double pole;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DCblock)
 };
