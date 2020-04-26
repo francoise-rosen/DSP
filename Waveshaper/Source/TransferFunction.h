@@ -61,6 +61,7 @@ public:
     }
     
     // this one nicely grows to distortion
+    // dc offset if sym changed, audible w/o signal on input
     forcedinline double sfdsine(double& x, double index, double sym=0) noexcept
     {
         index = expScale(index, min, max, 0.1, 10.0, 4.0);

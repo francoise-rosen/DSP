@@ -270,11 +270,18 @@ AudioProcessorEditor* WaveshaperAudioProcessor::createEditor()
 //==============================================================================
 void WaveshaperAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-
+    
+    MemoryOutputStream stream(destData, false);
+    parameters.state.writeToStream(stream);
 }
 
 void WaveshaperAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    ValueTree tree = ValueTree::readFromData (data, sizeInBytes);
+    if (tree.isValid())
+    {
+        parameters.state = tree;
+    }
 
 }
 
