@@ -193,6 +193,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_utils.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		19CE3415EE08F5B01D51F5F9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = JucePluginDefines.h;
+			path = ../../JuceLibraryCode/JucePluginDefines.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		1C0D6D315F85348E465A6D26 = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -673,6 +680,7 @@
 				C65D88981D119E4C15785D95,
 				3CD3E6A9301B39E61BB8B1D1,
 				9B9AA898E492E00A14769D5E,
+				19CE3415EE08F5B01D51F5F9,
 			);
 			name = "JUCE Library Code";
 			sourceTree = "<group>";
@@ -731,6 +739,34 @@
 			);
 			name = Source;
 			sourceTree = "<group>";
+		};
+		BB657B3777562C395586C28E = {
+			isa = PBXTargetDependency;
+			target = AD133F99BE2B840F995D2B24;
+		};
+		3FC71AAED791827997B74B33 = {
+			isa = PBXTargetDependency;
+			target = C468BAB6B9187370BC434990;
+		};
+		623D2E5479721052A3598EBD = {
+			isa = PBXTargetDependency;
+			target = 27DD8AA19C93E273374D6AD9;
+		};
+		78DE0928B1368C0DE958E2C5 = {
+			isa = PBXTargetDependency;
+			target = 523A084C7773DF111230296B;
+		};
+		B8CB65C7D58051DC4B4D8008 = {
+			isa = PBXTargetDependency;
+			target = 523A084C7773DF111230296B;
+		};
+		62F93CEA547ADFE01656F10B = {
+			isa = PBXTargetDependency;
+			target = 523A084C7773DF111230296B;
+		};
+		DF10EA70BC0C6AABDEF70F1A = {
+			isa = PBXTargetDependency;
+			target = 523A084C7773DF111230296B;
 		};
 		F3D7F8A65E5FBBB872119583 = {
 			isa = XCBuildConfiguration;
@@ -828,7 +864,6 @@
 					"JucePlugin_Build_Standalone=0",
 					"JucePlugin_Build_Unity=0",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -933,7 +968,6 @@
 					"JucePlugin_Build_Standalone=0",
 					"JucePlugin_Build_Unity=0",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1030,7 +1064,6 @@
 					"JucePlugin_Build_Standalone=1",
 					"JucePlugin_Build_Unity=0",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					"/Applications/JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
@@ -1123,7 +1156,6 @@
 					"JucePlugin_Build_Unity=0",
 					"JUCE_SHARED_CODE=1",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					"/Applications/JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
@@ -1167,11 +1199,12 @@
 				CODE_SIGN_IDENTITY = "";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
+				ENABLE_TESTABILITY = NO;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
@@ -1215,10 +1248,12 @@
 				CODE_SIGN_IDENTITY = "";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = NO;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
@@ -1235,22 +1270,6 @@
 				ZERO_LINK = NO;
 			};
 			name = Release;
-		};
-		2A6A806F6B235C71E782D118 = {
-			isa = PBXTargetDependency;
-			target = AD133F99BE2B840F995D2B24;
-		};
-		39398D9BBDF04B9EFD0A9DCE = {
-			isa = PBXTargetDependency;
-			target = C468BAB6B9187370BC434990;
-		};
-		FF709E21986DF272F13A232A = {
-			isa = PBXTargetDependency;
-			target = 27DD8AA19C93E273374D6AD9;
-		};
-		6617F9CD7205AE2D62D4E4A7 = {
-			isa = PBXTargetDependency;
-			target = 523A084C7773DF111230296B;
 		};
 		3C79DA803914E65218244299 = {
 			isa = XCConfigurationList;
@@ -1276,10 +1295,10 @@
 			buildPhases = ( );
 			buildRules = ( );
 			dependencies = (
-				2A6A806F6B235C71E782D118,
-				39398D9BBDF04B9EFD0A9DCE,
-				FF709E21986DF272F13A232A,
-				6617F9CD7205AE2D62D4E4A7,
+				BB657B3777562C395586C28E,
+				3FC71AAED791827997B74B33,
+				623D2E5479721052A3598EBD,
+				78DE0928B1368C0DE958E2C5,
 			);
 			name = "Waveshaper - All";
 			productName = Waveshaper;
@@ -1338,7 +1357,7 @@
 			);
 			buildRules = ( );
 			dependencies = (
-				6617F9CD7205AE2D62D4E4A7,
+				B8CB65C7D58051DC4B4D8008,
 			);
 			name = "Waveshaper - VST3";
 			productName = Waveshaper;
@@ -1410,7 +1429,7 @@
 			);
 			buildRules = ( );
 			dependencies = (
-				6617F9CD7205AE2D62D4E4A7,
+				62F93CEA547ADFE01656F10B,
 			);
 			name = "Waveshaper - AU";
 			productName = Waveshaper;
@@ -1471,7 +1490,7 @@
 			);
 			buildRules = ( );
 			dependencies = (
-				6617F9CD7205AE2D62D4E4A7,
+				DF10EA70BC0C6AABDEF70F1A,
 			);
 			name = "Waveshaper - Standalone Plugin";
 			productName = Waveshaper;
