@@ -36,7 +36,12 @@ private:
     std::unique_ptr<SliderAttachment> freqSliderAttachment;
     std::unique_ptr<SliderAttachment> gainSliderAttachment;
     
-    const int edge{20};
+    float textBoxWidth{50};
+    float textBoxHeight{20};
+    
+    std::unique_ptr<int> border;
+    int dialWidth;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OnePoleAudioProcessorEditor)
 };

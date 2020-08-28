@@ -44,8 +44,8 @@ parameters(*this,
                                                            juce::NormalisableRange<float>(-100.0f, 24.0f, 0.1f, std::log(0.5f)/std::log(94.0f/124.0f)),
                                                            gainAtom.get(), "dB",
                                                            juce::AudioProcessorParameter::genericParameter,
-                                                           [](float val, int) {return juce::String(val, 2) + "dB";},
-                                                           [](const juce::String& s) {return s.dropLastCharacters(2).getFloatValue();}
+                                                           [](float val, int) {return juce::String(val, 1) + "dB";},
+                                                           [](const juce::String& s) {return s.dropLastCharacters(1).getFloatValue();}
                                                            )
                
            }
@@ -73,7 +73,7 @@ void OnePoleAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     {
         LPF.push_back(std::make_unique<OnePole<float>>(freqAtom.get(), sampleRate));
     }
-    gainSmoother = std::make_unique<OnePole<float>>(10.0f, sampleRate);
+    gainSmoother = std::make_unique<OnePole<float>>(10000.0f, sampleRate);
 }
 
 void OnePoleAudioProcessor::releaseResources()
