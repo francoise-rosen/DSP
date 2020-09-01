@@ -13,19 +13,9 @@
 ResonatorAudioProcessorEditor::ResonatorAudioProcessorEditor (ResonatorAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    
-    freqSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
-    freqSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textboxWidth, textboxHeight);
-    addAndMakeVisible(&freqSlider);
-    
-    qSlider.setSliderStyle(juce::Slider::SliderStyle::Rotary);
-    qSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, textboxWidth, textboxHeight);
-    addAndMakeVisible(&qSlider);
-    
-    gainSlider.setSliderStyle(juce::Slider::SliderStyle::Rotary);
-    gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, textboxWidth, textboxHeight);
-    addAndMakeVisible(&gainSlider);
-    
+
+    initialiseSliders();
+
     addAndMakeVisible(&algoBox);
     fillAlgoBox();
     
@@ -33,14 +23,9 @@ ResonatorAudioProcessorEditor::ResonatorAudioProcessorEditor (ResonatorAudioProc
     bypassButton.setToggleState(true, juce::dontSendNotification);
     addAndMakeVisible(&bypassButton);
     
-    // attach GUI to the AudioProcessesorValueTreeState object
-    freqSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.getValueTree(), audioProcessor.paramFreq, freqSlider);
-    qSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.getValueTree(), audioProcessor.paramQ, qSlider);
-    gainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.getValueTree(), audioProcessor.paramGain, gainSlider);
-    algoBoxAttachment = std::make_unique<ComboBoxAttachment>(audioProcessor.getValueTree(), audioProcessor.paramAlgorithm, algoBox);
-    bypassAttachment = std::make_unique<ButtonAttachment>(audioProcessor.getValueTree(), audioProcessor.paramBypass, bypassButton);
+    attachParameters();
     
-    setSize (340, 270);
+    setSize (210, 240);
 }
 
 ResonatorAudioProcessorEditor::~ResonatorAudioProcessorEditor()
@@ -53,33 +38,81 @@ void ResonatorAudioProcessorEditor::fillAlgoBox()
 {
     // make a list of available band pass algorithms
     assert (ResonatorAudioProcessor::listOfAlgorithms.size() == (int)sfd::FilterAlgorithm::numOfAlgorithms);
-    for (int i = 0; i < (int)sfd::FilterAlgorithm::numOfAlgorithms; ++i)
-    {
+    for (int i = 0; i < (int)sfd::FilterAlgorithm::numOfAlgorithms; ++i){
         algoBox.addItem(ResonatorAudioProcessor::listOfAlgorithms[i], 100 + i);
     }
+}
+
+void ResonatorAudioProcessorEditor::initialiseSliders()
+{
+    for (int i = 0; i < numOfSliders; ++i)
+    {
+            sliderArray.push_back(std::make_unique<juce::Slider>(
+            juce::Slider::SliderStyle::Rotary, juce::Slider::TextBoxBelow
+                                                                 )
+                                  );
+            sliderArray[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
+            addAndMakeVisible(*(sliderArray[i]));
+    };
+    
+}
+                              
+void ResonatorAudioProcessorEditor::attachParameters()
+{
+    // attach the sliders to the AudioProcessorValueTreeState object
+    for (int i = 0; i < sliderArray.size(); ++i)
+    {
+        sliderAttachments.resize(sliderArray.size());
+        sliderAttachments[i] = std::make_unique<SliderAttachment>(
+            audioProcessor.getValueTree(),
+             paramData::paramArray[i].getID(),
+             *(sliderArray[i])
+                                                                  );
+    }
+    
+    // attach the combobox to the AudioProcessorValueTreeState object
+    algoBoxAttachment = std::make_unique<ComboBoxAttachment>(
+         audioProcessor.getValueTree(), paramData::paramArray[paramData::algo].getID(), algoBox
+                                                             );
+    // attach the bypass button to the AudioProcessorValueTreeState object
+    bypassAttachment = std::make_unique<ButtonAttachment>(
+         audioProcessor.getValueTree(), paramData::paramArray[paramData::bypass].getID(), bypassButton
+                                                          );
+    
 }
 
 //==============================================================================
 void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
+    
+    g.setColour (juce::Colours::silver);
+    
+    auto leftArea = getLocalBounds().removeFromLeft(getWidth() * 0.65).reduced(edge);
+    auto rightArea = getLocalBounds().removeFromRight(getWidth() * 0.35).reduced(edge);
+    g.drawRoundedRectangle(leftArea.withRightX(getWidth() * 0.45).withX(edge).toFloat(), 3, 3);
+    for (int i = 0; i < 3; ++i) {
+        g.drawRoundedRectangle(rightArea.removeFromTop(getHeight()/3).toFloat(), 3, 3);
+    }
+    
+    g.setColour(juce::Colours::whitesmoke);
+    g.drawFittedText("FREQ", leftArea.withBottom(getHeight() / 3).withRightX(getWidth() * 0.56), juce::Justification::centredRight, 1);
 }
 
 void ResonatorAudioProcessorEditor::resized()
 {
-     auto filterArea = getLocalBounds().removeFromLeft(getWidth()/2);
-    auto gainArea = getLocalBounds().removeFromRight(getWidth()/2);
-    int barHeight = 150;
-    auto edge = 10;
+    auto leftArea = getLocalBounds().removeFromLeft(getWidth() * 0.5);
     
-    qSlider.setBounds(filterArea.removeFromBottom(getHeight() - barHeight).reduced(edge));
-    freqSlider.setBounds(filterArea.reduced(filterArea.getWidth()/4, edge));
+    auto sliders = 3;
+    auto sliderHeight = getHeight()/sliders;
+    for (int i = 0; i < sliders; ++i) {
+            sliderArray[i]->setBounds(leftArea.removeFromTop(sliderHeight));
+        }
+    auto rightArea = getLocalBounds().removeFromRight(getWidth()* 0.35);
+    sliderArray[paramData::gain]->setBounds(rightArea.removeFromBottom(sliderHeight));
+    algoBox.setBounds(rightArea.removeFromBottom(sliderHeight/2).reduced(edge, edge*2));
+    bypassButton.setBounds(rightArea.removeFromBottom(sliderHeight/2).removeFromRight(rightArea.getWidth()/4).reduced(edge));
     
-    algoBox.setBounds(gainArea.removeFromTop(getHeight()/4).reduced(edge, edge * 2));
-    bypassButton.setBounds(gainArea.removeFromTop(juce::jmin(getWidth()/4, gainArea.getHeight()/3)).reduced(edge, juce::jmin(edge * 2, gainArea.getHeight()/5)));
+
     
-    gainSlider.setBounds(gainArea.reduced(edge));
 }

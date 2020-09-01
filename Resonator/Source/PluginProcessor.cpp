@@ -10,12 +10,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-// initialise static members - parameter IDs
-juce::String ResonatorAudioProcessor::paramFreq = "cutOffFrequency";
-juce::String ResonatorAudioProcessor::paramQ = "qualityFactor";
-juce::String ResonatorAudioProcessor::paramGain = "gain";
-juce::String ResonatorAudioProcessor::paramBypass = "bypass";
-juce::String ResonatorAudioProcessor::paramAlgorithm = "algorithm";
+
 juce::StringArray ResonatorAudioProcessor::listOfAlgorithms {"BZT", "Analogue", "Simple Resonator", "Symmetrical Resonator"};
 
 //==============================================================================
@@ -30,60 +25,26 @@ ResonatorAudioProcessor::ResonatorAudioProcessor()
                      #endif
                        ),
 #endif
-freqAtom{1000.0f}, qAtom{1.0f}, gainAtom{-12.0f},
+freqAtom{1000.0f}, qAtom{1.0f}, gainAtom{-12.0f}, fineTuneAtom{0.0},
 bypassAtom{true}, // resonant filter is on by default
 algorithmAtom{1}, // default - symmetrical resonant filter
 
 //==============================================================================
 // initialise the AudioProcessorValueTreeState object
+
 parameters{*this,
     nullptr,
     juce::Identifier("RESON_PARAMETERS"),
-    
     // ParameterLayout
-    {
-    std::make_unique<juce::AudioParameterFloat>(paramFreq,
-                                                "FREQUENCY",
-                                                juce::NormalisableRange<float>(20.0f, 19000.0f,
-                                                    0.01f,
-                                                std::log(0.5f) / std::log(1000.0f / 18980.0f)),
-                                                freqAtom.get(), "Hz",
-                                                juce::AudioProcessorParameter::genericParameter,
-                                                [](float val, int) {return juce::String(val,2) + "Hz";},
-                                                [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue(); }
-                                                
-                                                                               
-        ),
-        std::make_unique<juce::AudioParameterFloat>(paramQ,
-                                                    "QUALITY_FACTOR",
-                                                   (float)sfd::FilterParameters<double>::Q_MIN, (float)sfd::FilterParameters<double>::Q_MAX, qAtom.get()),
-        std::make_unique<juce::AudioParameterFloat>(paramGain,
-                                                    "GAIN",
-                                                    juce::NormalisableRange<float>(-100.0f, 12.0f, 0.01f,
-                                                                                   std::log(0.5f)/std::log(88.0f / 112.0f)),
-                                                    gainAtom.get(), "dB",
-                                                    juce::AudioProcessorParameter::genericParameter,
-                                                    [](float val, int) {return juce::String(val, 3) + "dB";},
-                                                    [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}
-                                                    ),
-        std::make_unique<juce::AudioParameterChoice>(paramAlgorithm,
-                                                  "ALGORITHM",
-                                                  listOfAlgorithms, algorithmAtom.get()),
-        std::make_unique<juce::AudioParameterBool>(paramBypass,
-                                                   "BYPASS",
-                                                   bypassAtom.get())
-        
-    }
+    createParameterLayout()
 }
 
 //==============================================================================
 {
     // add parameter listeners
-    parameters.addParameterListener(paramFreq, this);
-    parameters.addParameterListener(paramQ, this);
-    parameters.addParameterListener(paramGain, this);
-    parameters.addParameterListener(paramBypass, this);
-    parameters.addParameterListener(paramAlgorithm, this);
+    for (auto p : paramData::paramArray) {
+        parameters.addParameterListener(p.getID(), this);
+    }
     
     lastGain = gainAtom.get();
     
@@ -104,7 +65,7 @@ void ResonatorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
         stereoResonator.add(new sfd::Resonator<double>(resonParameters, sampleRate));
     }
     
-    // 10kHz lopass to smooth out discontinuities of rapid change of the frequency parameter
+    // 10kHz lopass to smooth out discontinuities of rapid change of the frequency parameters
     onePole = std::make_unique<sfd::OnePole<double>>(10000.0, sampleRate);
 }
 
@@ -137,27 +98,32 @@ bool ResonatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 
 void ResonatorAudioProcessor::parameterChanged(const juce::String& parameterID, float newValue)
 {
-    if (parameterID == paramFreq)
+    if (parameterID == paramData::paramArray[paramData::freq].getID())
     {
         freqAtom = newValue;
     }
     
-    else if (parameterID == paramQ)
+    else if (parameterID == paramData::paramArray[paramData::fine_tune].getID())
+    {
+        fineTuneAtom = newValue;
+    }
+    
+    else if (parameterID == paramData::paramArray[paramData::q].getID())
     {
         qAtom = newValue;
     }
     
-    else if (parameterID == paramGain)
+    else if (parameterID == paramData::paramArray[paramData::gain].getID())
     {
         gainAtom = newValue;
     }
     
-    else if (parameterID == paramBypass)
+    else if (parameterID == paramData::paramArray[paramData::bypass].getID())
     {
         bypassAtom = (bool)newValue;
     }
     
-    else if (parameterID == paramAlgorithm)
+    else if (parameterID == paramData::paramArray[paramData::algo].getID())
     {
         algorithmAtom = (int)newValue;
     }
@@ -173,7 +139,7 @@ void ResonatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     const bool bypass = bypassAtom.get();
     
     // smooth out the frequency parameter signam
-    resonParameters.frequency = onePole->process(freqAtom.get());
+    resonParameters.frequency = onePole->process(freqAtom.get() + fineTuneAtom.get());
     resonParameters.Q = qAtom.get();
     resonParameters.algorithm = static_cast<sfd::FilterAlgorithm>(algorithmAtom.get());
 
@@ -281,6 +247,68 @@ void ResonatorAudioProcessor::changeProgramName (int index, const juce::String& 
 
 juce::AudioProcessorValueTreeState& ResonatorAudioProcessor::getValueTree()
 {
+    return parameters;
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout ResonatorAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout parameters;
+    
+    parameters.add(
+    std::make_unique<juce::AudioParameterFloat>(
+         paramData::paramArray[paramData::freq].getID(),
+         paramData::paramArray[paramData::freq].getName(),
+         juce::NormalisableRange<float>(70.0f, 19000.0f, 0.01f,
+         std::log(0.5f) / std::log(1000.0f / 18980.0f)),
+         freqAtom.get(), "Hz",
+         juce::AudioProcessorParameter::genericParameter,
+         [](float val, int) {return juce::String(val,2) + "Hz";},
+         [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}
+        )
+                   );
+    parameters.add(
+    std::make_unique<juce::AudioParameterFloat>(
+         paramData::paramArray[paramData::q].getID(),
+         paramData::paramArray[paramData::q].getName(),
+         (float)sfd::FilterParameters<double>::Q_MIN, (float)sfd::FilterParameters<double>::Q_MAX,
+         qAtom.get()
+                                                )
+                   );
+   
+   parameters.add(
+   std::make_unique<juce::AudioParameterFloat>(
+        paramData::paramArray[paramData::gain].getID(),
+        paramData::paramArray[paramData::gain].getName(),
+        juce::NormalisableRange<float>(-100.0f, 24.0f, 0.01f,
+        std::log(0.5f)/std::log(88.0f / 124.0f)),
+        gainAtom.get(), "dB",
+        juce::AudioProcessorParameter::genericParameter,
+        [](float val, int) {return juce::String(val, 3) + "dB";},
+        [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}
+                                                )
+                  );
+    parameters.add(
+    std::make_unique<juce::AudioParameterChoice>(
+        paramData::paramArray[paramData::algo].getID(),
+        paramData::paramArray[paramData::algo].getName(),
+        listOfAlgorithms, algorithmAtom.get())
+                   );
+    
+    parameters.add(
+    std::make_unique<juce::AudioParameterBool>(
+        paramData::paramArray[paramData::bypass].getID(),
+        paramData::paramArray[paramData::bypass].getName(),
+        bypassAtom.get())
+                   );
+    parameters.add(
+    std::make_unique<juce::AudioParameterFloat>(
+        paramData::paramArray[paramData::fine_tune].getID(),
+        paramData::paramArray[paramData::fine_tune].getName(),
+        -50.0, 50.0,
+        fineTuneAtom.get()
+                        )
+                   );
+    
     return parameters;
 }
 

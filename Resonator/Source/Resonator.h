@@ -61,7 +61,6 @@ struct FilterParameters
         if (*this == params) return *this;
         frequency = params.frequency;
         Q = juce::jmax(params.Q, Q_MIN);
-        //Q = params.Q;
         algorithm = params.algorithm;
         return *this;
     }
@@ -262,7 +261,7 @@ public:
     
     ~OnePole() {}
     
-    T process(const T& xn)
+    T process(const T& xn) noexcept
     {
         T yn = a0 * xn - b1 * z1;
         z1 = yn;

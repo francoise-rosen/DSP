@@ -23,6 +23,7 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    
 
 private:
     ResonatorAudioProcessor& audioProcessor;
@@ -30,22 +31,28 @@ private:
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     
-    juce::Slider freqSlider;
-    juce::Slider qSlider;
-    juce::Slider gainSlider;
+    // GUI Objects
+    enum slider {freqSlider, fineTuneSlider, qSlider, gainSlider, numOfSliders};
+    void initialiseSliders();
+
+    std::vector<std::unique_ptr<juce::Slider>> sliderArray;
     juce::ComboBox algoBox;
     juce::TextButton bypassButton;
     
     void fillAlgoBox();
     
-    int textboxWidth {65};
-    int textboxHeight {25};
+    const int textBoxWidth {55};
+    const int textBoxHeight {10};
+    int numOfAreas {6};
     
-    std::unique_ptr<SliderAttachment> freqSliderAttachment;
-    std::unique_ptr<SliderAttachment> qSliderAttachment;
-    std::unique_ptr<SliderAttachment> gainSliderAttachment;
+    
+    std::vector<std::unique_ptr<SliderAttachment>> sliderAttachments;
+    void attachParameters();
+    
     std::unique_ptr<ComboBoxAttachment> algoBoxAttachment;
     std::unique_ptr<ButtonAttachment> bypassAttachment;
+    
+    const int edge{5};
     
     
 

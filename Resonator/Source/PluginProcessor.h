@@ -15,6 +15,32 @@
 /**
 */
 
+
+namespace paramData
+{
+    
+    class Param
+    {
+    public:
+        Param(juce::String n)
+        :paramName{n}
+        {
+            paramID = paramName + "_ID";
+        }
+        
+        juce::String getID() const {return paramID;}
+        juce::String getName() const {return paramName;}
+    private:
+        juce::String paramName;
+        juce::String paramID;
+        
+    };
+    
+    enum {freq, fine_tune, q, gain, algo, bypass};
+    
+    const static std::vector<Param> paramArray {Param{"FREQUENCY"}, Param{"FINETUNE"}, Param{"Q"}, Param{"GAIN"}, Param{"ALGORITHM"}, Param{"BYPASS"}};
+}
+
 class ResonatorAudioProcessor  : public juce::AudioProcessor,
 public juce::AudioProcessorValueTreeState::Listener
 {
@@ -59,19 +85,16 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     juce::AudioProcessorValueTreeState& getValueTree();
     
-    // parameter IDs
-    static juce::String paramFreq;
-    static juce::String paramQ;
-    static juce::String paramGain;
-    static juce::String paramBypass;
-    static juce::String paramAlgorithm;
+    // list of algorithms
     static juce::StringArray listOfAlgorithms;
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
 private:
     //==============================================================================
     juce::Atomic<double> freqAtom;
     juce::Atomic<double> qAtom;
     juce::Atomic<double> gainAtom;
+    juce::Atomic<double> fineTuneAtom;
     juce::Atomic<bool> bypassAtom;
     juce::Atomic<int> algorithmAtom;
     
