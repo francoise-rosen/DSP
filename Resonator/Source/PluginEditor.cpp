@@ -25,7 +25,9 @@ ResonatorAudioProcessorEditor::ResonatorAudioProcessorEditor (ResonatorAudioProc
     
     attachParameters();
     
-    setSize (210, 240);
+    setResizable(true, true);
+    setResizeLimits(segmentLength, segmentLength * 5 / 3, segmentLength * 6,  segmentLength * 10);
+    setSize (segmentLength * 3, segmentLength * 5);
 }
 
 ResonatorAudioProcessorEditor::~ResonatorAudioProcessorEditor()
@@ -84,35 +86,82 @@ void ResonatorAudioProcessorEditor::attachParameters()
 //==============================================================================
 void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll (juce::Colours::black);
     
-    g.setColour (juce::Colours::silver);
+    g.setColour (juce::Colours::gold);
     
-    auto leftArea = getLocalBounds().removeFromLeft(getWidth() * 0.65).reduced(edge);
-    auto rightArea = getLocalBounds().removeFromRight(getWidth() * 0.35).reduced(edge);
-    g.drawRoundedRectangle(leftArea.withRightX(getWidth() * 0.45).withX(edge).toFloat(), 3, 3);
-    for (int i = 0; i < 3; ++i) {
-        g.drawRoundedRectangle(rightArea.removeFromTop(getHeight()/3).toFloat(), 3, 3);
+    setFrames();
+    for (int i = 0; i < frames.size(); ++i)
+    {
+        if (frames[i] != nullptr)
+        {
+           g.drawRoundedRectangle(frames[i]->toFloat().reduced(edge * 2.5), 7, 2);
+        }
     }
+
+//    auto leftArea = getLocalBounds().removeFromLeft(getWidth() * 0.55).reduced(edge);
+//    auto rightArea = getLocalBounds().removeFromRight(getWidth() * 0.35).reduced(edge);
+//    g.drawRoundedRectangle(leftArea.withRightX(getWidth() * 0.45).withX(edge).toFloat(), 10, 2);
+//
+//    for (int i = 0; i < 3; ++i) {
+//        g.drawRoundedRectangle(rightArea.removeFromTop(getHeight()/3).toFloat(), 3, 3);
+//    }
     
-    g.setColour(juce::Colours::whitesmoke);
-    g.drawFittedText("FREQ", leftArea.withBottom(getHeight() / 3).withRightX(getWidth() * 0.56), juce::Justification::centredRight, 1);
+   // g.setColour(juce::Colours::whitesmoke);
+//    g.drawFittedText("FREQ", leftArea.withBottom(getHeight() / 3).withRightX(getWidth() * 0.56), juce::Justification::centredRight, 1);
 }
 
 void ResonatorAudioProcessorEditor::resized()
 {
-    auto leftArea = getLocalBounds().removeFromLeft(getWidth() * 0.5);
+//    auto leftArea = getLocalBounds().removeFromLeft(getWidth() * 0.5);
+//
+//    auto sliders = 3;
+//    auto sliderHeight = getHeight()/sliders;
+//    for (int i = 0; i < sliders; ++i) {
+//            sliderArray[i]->setBounds(leftArea.removeFromTop(sliderHeight));
+//        }
+//    auto rightArea = getLocalBounds().removeFromRight(getWidth()* 0.35);
+//    sliderArray[paramData::gain]->setBounds(rightArea.removeFromBottom(sliderHeight));
+//    algoBox.setBounds(rightArea.removeFromBottom(sliderHeight/2).reduced(edge, edge*2));
+//    bypassButton.setBounds(rightArea.removeFromBottom(sliderHeight/2).removeFromRight(rightArea.getWidth()/4).reduced(edge));
+    setFrames();
     
-    auto sliders = 3;
-    auto sliderHeight = getHeight()/sliders;
-    for (int i = 0; i < sliders; ++i) {
-            sliderArray[i]->setBounds(leftArea.removeFromTop(sliderHeight));
-        }
-    auto rightArea = getLocalBounds().removeFromRight(getWidth()* 0.35);
-    sliderArray[paramData::gain]->setBounds(rightArea.removeFromBottom(sliderHeight));
-    algoBox.setBounds(rightArea.removeFromBottom(sliderHeight/2).reduced(edge, edge*2));
-    bypassButton.setBounds(rightArea.removeFromBottom(sliderHeight/2).removeFromRight(rightArea.getWidth()/4).reduced(edge));
+//    auto rect = *(frames[0]);
+//    sliderArray[paramData::freq]->setBounds(rect.reduced(edge));
     
+    //auto box = getLocalBounds().reduced(getWidth() / 6, getHeight() * 3 / 10).reduced(edge);
+//    sliderArray[paramData::freq]->setBounds(frames[(int)GuiFrame::freqControl]->reduced(edge));
+//
+//    sliderArray[paramData::fine_tune]->setBounds(frames[(int)GuiFrame::fineControl]->reduced(edge));
+//
+//    sliderArray[paramData::q]->setBounds(frames[(int)GuiFrame::qControl]->reduced(edge));
+    
+    for (int i = 0; i < sliderArray.size(); ++i)
+    {
+        sliderArray[i]->setBounds(frames[i]->reduced(edge));
+    }
+}
 
+void ResonatorAudioProcessorEditor::setFrames()
+{
+    frames.resize((int)GuiFrame::numOfFrames);
+    auto upperHeight = getHeight() * 3 / 10;
+    auto lowerHeight = upperHeight;
+    auto midSection = getLocalBounds();
+    auto upperSection = midSection.removeFromTop(upperHeight);
+    auto lowerSection = midSection.removeFromBottom(lowerHeight);
+    
+    frames[(int)GuiFrame::freqControl] = std::make_unique<juce::Rectangle<int>>(midSection);
+    frames[(int)GuiFrame::fineControl] = std::make_unique<juce::Rectangle<int>>(upperSection.removeFromLeft(getWidth()/2));
+    frames[(int)GuiFrame::qControl] = std::make_unique<juce::Rectangle<int>>(upperSection);
+    frames[(int)GuiFrame::gainControl] = std::make_unique<juce::Rectangle<int>>(lowerSection.removeFromRight(getWidth()/2));
+    frames[(int)GuiFrame::socialAndLogoObjects] = std::make_unique<juce::Rectangle<int>>(lowerSection);
+    
+    // check if there're no nullptr in the vector
+    for (int i = 0; i < frames.size(); ++i)
+    {
+        assert (frames[i] != nullptr);
+    }
+   
     
 }

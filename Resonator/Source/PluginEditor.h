@@ -14,6 +14,7 @@
 //==============================================================================
 /**
 */
+
 class ResonatorAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
@@ -23,6 +24,7 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    void setFrames();
     
 
 private:
@@ -32,7 +34,9 @@ private:
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     
     // GUI Objects
-    enum slider {freqSlider, fineTuneSlider, qSlider, gainSlider, numOfSliders};
+    enum Slider {freqSlider, fineTuneSlider, qSlider, gainSlider, numOfSliders};
+    enum class GuiFrame {freqControl = 0, fineControl, qControl, gainControl, socialAndLogoObjects, numOfFrames};
+    
     void initialiseSliders();
 
     std::vector<std::unique_ptr<juce::Slider>> sliderArray;
@@ -43,7 +47,10 @@ private:
     
     const int textBoxWidth {55};
     const int textBoxHeight {10};
-    int numOfAreas {6};
+    //int numOfAreas {6};
+    const float edge{5.0f};
+    const float segmentLength{70.0f};
+    std::vector<std::unique_ptr<juce::Rectangle<int>>> frames;
     
     
     std::vector<std::unique_ptr<SliderAttachment>> sliderAttachments;
@@ -52,7 +59,7 @@ private:
     std::unique_ptr<ComboBoxAttachment> algoBoxAttachment;
     std::unique_ptr<ButtonAttachment> bypassAttachment;
     
-    const int edge{5};
+    
     
     
 

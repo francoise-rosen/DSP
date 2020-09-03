@@ -262,7 +262,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout ResonatorAudioProcessor::cre
          std::log(0.5f) / std::log(1000.0f / 18980.0f)),
          freqAtom.get(), "Hz",
          juce::AudioProcessorParameter::genericParameter,
-         [](float val, int) {return juce::String(val,2) + "Hz";},
+         [](float val, int) {
+             if (val < 1000.0f)
+             {
+                 return juce::String(val, 2) + "Hz";
+             }
+             else
+             {
+                 return juce::String(val / 1000.0f, 2) + "kHz";
+             }
+         },
          [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}
         )
                    );
@@ -283,7 +292,20 @@ juce::AudioProcessorValueTreeState::ParameterLayout ResonatorAudioProcessor::cre
         std::log(0.5f)/std::log(88.0f / 124.0f)),
         gainAtom.get(), "dB",
         juce::AudioProcessorParameter::genericParameter,
-        [](float val, int) {return juce::String(val, 3) + "dB";},
+        [](float val, int)
+        {
+            if (val > -100.0f)
+            {
+                return juce::String(val, 3) + "dB";
+            }
+            
+            else
+            {
+                return juce::String("-inf");
+            }
+            
+            
+        },
         [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}
                                                 )
                   );
