@@ -496,6 +496,13 @@
 			path = "/Applications/JUCE/modules/juce_data_structures";
 			sourceTree = "<absolute>";
 		};
+		DFF9C4F84A2E84796DE88F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ResonLookAndFeel.h;
+			path = ../../Source/ResonLookAndFeel.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		E0D30A03A7F4AFDFCBEDC8ED = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -560,6 +567,7 @@
 				B397BE84E1D004BB4D2A1325,
 				C41987BDCCD7FF84759964BA,
 				C388ECCDFA38DD84D55D05AE,
+				DFF9C4F84A2E84796DE88F59,
 			);
 			name = Source;
 			sourceTree = "<group>";

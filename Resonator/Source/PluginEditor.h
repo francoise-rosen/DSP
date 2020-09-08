@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "ResonLookAndFeel.h"
+
 
 //==============================================================================
 /**
@@ -28,12 +30,14 @@ public:
     
 
 private:
+    
     ResonatorAudioProcessor& audioProcessor;
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
-    
+
     // GUI Objects
+    ResonLookAndFeel resonLookAndFeel;
     enum Slider {freqSlider, fineTuneSlider, qSlider, gainSlider, numOfSliders};
     enum class GuiFrame {freqControl = 0, fineControl, qControl, gainControl, socialAndLogoObjects, numOfFrames};
     
@@ -60,9 +64,6 @@ private:
     std::unique_ptr<ButtonAttachment> bypassAttachment;
     
     
-    
-    
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResonatorAudioProcessorEditor)
 };
 
