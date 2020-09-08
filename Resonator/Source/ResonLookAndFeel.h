@@ -40,7 +40,7 @@ public:
         g.drawEllipse(rx, ry, rw, rw, rimThickness);
         g.setColour(colourSet[textAndRimColour].darker());
         float outerRimOffset = 3.0f;
-        g.drawEllipse(rx - rimThickness - outerRimOffset, ry - rimThickness - outerRimOffset, rw + rimThickness + outerRimOffset, rw + rimThickness + outerRimOffset, outerRimOffset);
+        g.drawEllipse(rx - rimThickness + outerRimOffset, ry - rimThickness + outerRimOffset, rw + rimThickness, rw + rimThickness, outerRimOffset);
         
         // draw the thumb
         

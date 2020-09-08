@@ -112,7 +112,7 @@ void ResonatorAudioProcessorEditor::resized()
     
     for (int i = 0; i < sliderArray.size(); ++i)
     {
-        sliderArray[i]->setBounds(frames[i]->reduced(edge * 3));
+        sliderArray[i]->setBounds(frames[i]->reduced(edge * 4));
     }
 }
 
