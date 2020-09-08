@@ -17,7 +17,8 @@
 /**
 */
 
-class ResonatorAudioProcessorEditor  : public juce::AudioProcessorEditor
+class ResonatorAudioProcessorEditor  : public juce::AudioProcessorEditor,
+                                       public juce::Button::Listener
 {
 public:
     ResonatorAudioProcessorEditor (ResonatorAudioProcessor&);
@@ -26,9 +27,11 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void setFrames();
     
-
+    //==============================================================================
+    void buttonClicked(juce::Button*) override;
+    void buttonStateChanged(juce::Button*) override;
+    
 private:
     
     ResonatorAudioProcessor& audioProcessor;
@@ -38,28 +41,32 @@ private:
 
     // GUI Objects
     ResonLookAndFeel resonLookAndFeel;
-    enum Slider {freqSlider, fineTuneSlider, qSlider, gainSlider, numOfSliders};
-    enum class GuiFrame {freqControl = 0, fineControl, qControl, gainControl, socialAndLogoObjects, numOfFrames};
-    
-    void initialiseSliders();
-
+    enum SliderObject {freqSlider, fineTuneSlider, qSlider, gainSlider, numOfSliders};
+    //enum Labels {freqLabel, fineLabel, qLabel, gainLabel, numOfLabels};
+    enum GuiFrame {freqFrame = 0, fineFrame, qFrame, gainFrame, algorithmListFrame, linkButtonsFrame, numOfFrames};
+    enum LinkObject {soundcloud, linkedIn, github, facebook};
     std::vector<std::unique_ptr<juce::Slider>> sliderArray;
+    std::vector<std::unique_ptr<juce::Label>> labelArray;
+    std::vector<std::unique_ptr<juce::ImageButton>> linkButtonArray;
     juce::ComboBox algoBox;
     juce::TextButton bypassButton;
     
+    void initialiseSliders();
+    void initialiseImageButtons();
+    //void initialiseLabels();
     void fillAlgoBox();
     
-    const int textBoxWidth {55};
-    const int textBoxHeight {10};
-    //int numOfAreas {6};
+    // Size parameters
     const float edge{5.0f};
-    const float segmentLength{70.0f};
+    const float segmentLength{90.0f};
+    const float textBoxWidth{50.0f};
+    const float textBoxHeight{25.0f};
     std::vector<std::unique_ptr<juce::Rectangle<int>>> frames;
+    void setFrames();
     
-    
+    // AudioProcessorValueTreeState attachments
     std::vector<std::unique_ptr<SliderAttachment>> sliderAttachments;
     void attachParameters();
-    
     std::unique_ptr<ComboBoxAttachment> algoBoxAttachment;
     std::unique_ptr<ButtonAttachment> bypassAttachment;
     

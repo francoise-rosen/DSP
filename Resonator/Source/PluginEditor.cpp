@@ -16,6 +16,7 @@ ResonatorAudioProcessorEditor::ResonatorAudioProcessorEditor (ResonatorAudioProc
 
     setLookAndFeel(&resonLookAndFeel);
     initialiseSliders();
+    //initialiseLabels();
 
     addAndMakeVisible(&algoBox);
     fillAlgoBox();
@@ -29,6 +30,7 @@ ResonatorAudioProcessorEditor::ResonatorAudioProcessorEditor (ResonatorAudioProc
     setResizable(true, true);
     setResizeLimits(segmentLength, segmentLength * 5 / 3, segmentLength * 6,  segmentLength * 10);
     setSize (segmentLength * 3, segmentLength * 5);
+    
 }
 
 ResonatorAudioProcessorEditor::~ResonatorAudioProcessorEditor()
@@ -61,7 +63,31 @@ void ResonatorAudioProcessorEditor::initialiseSliders()
     };
     
 }
-                              
+
+void ResonatorAudioProcessorEditor::initialiseImageButtons()
+{
+    
+}
+
+//void ResonatorAudioProcessorEditor::initialiseLabels()
+//{
+//    labelArray.clear();
+//    labelArray.resize(numOfLabels);
+//    std::fill(labelArray.begin(), labelArray.end(), nullptr);
+//    labelArray[freqLabel] = std::make_unique<juce::Label>("FreqLabel", "FRe<Q>ueNCy");
+//    labelArray[fineLabel] = std::make_unique<juce::Label>("FineLabel", "FINe");
+//    labelArray[qLabel] = std::make_unique<juce::Label>("qLabel", "ReSONaNCe");
+//    labelArray[gainLabel] = std::make_unique<juce::Label>("gainLabel", "GaIN");
+//    for (int i = 0; i < labelArray.size(); ++i)
+//    {
+//        if (labelArray[i] != nullptr)
+//        {
+//            addAndMakeVisible(*labelArray[i]);
+//            labelArray[i]->setAlwaysOnTop(true);
+//        }
+//    }
+//}
+
 void ResonatorAudioProcessorEditor::attachParameters()
 {
     // attach the sliders to the AudioProcessorValueTreeState object
@@ -92,32 +118,45 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
     g.fillAll (juce::Colours::black);
     resonLookAndFeel.setBackgroundColour(juce::Colours::black);
     
-    g.setColour (juce::Colours::gold);
+    g.setColour (juce::Colours::gold.withBrightness(0.26f).withHue(1.72f));
     
     setFrames();
     for (int i = 0; i < frames.size(); ++i)
     {
-        if (frames[i] != nullptr)
-        {
-           g.drawRoundedRectangle(frames[i]->toFloat(), 7, 2);
-        }
+        g.drawRoundedRectangle(frames[i]->toFloat(), 7, 2);
     }
-
+    
+    // add lables
+    //g.setFont(juce::Font("", "Monaco", 21.0f));
+    g.setColour(resonLookAndFeel.getRimColour());
+    g.drawFittedText("FRe<Q>ENCy", frames[freqFrame]->reduced(edge * 2), juce::Justification::topRight, 1);
+    g.drawFittedText("ReSONANCe", frames[qFrame]->withLeft(frames[qFrame]->getX() - edge * 4).reduced(0, edge * 3), juce::Justification::topLeft, 1);
+    g.drawFittedText("FINe", frames[fineFrame]->withRight(getWidth() * 0.67).withBottom(frames[fineFrame]->getBottom() - edge * 2), juce::Justification::bottomRight, 1);
+    g.drawFittedText("GaIN", frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - edge), juce::Justification::topRight, 1);
+    
 }
 
 void ResonatorAudioProcessorEditor::resized()
 {
-
     setFrames();
     
+    // resize sliders
     for (int i = 0; i < sliderArray.size(); ++i)
     {
         sliderArray[i]->setBounds(frames[i]->reduced(edge * 4));
     }
+    
+    // resize combobox
+    algoBox.setBounds(frames[algorithmListFrame]->reduced(edge, edge * 3.5f));
+    
+//    const std::pair<int, int> smallLabelDim = std::make_pair<int, int>(getWidth()/4, getHeight()/10);
+//    labelArray[fineLabel]->setBounds(frames[fineFrame]->getBottom() - segmentLength * 0.25, getWidth() * 0.5, smallLabelDim.first, smallLabelDim.second);
+    
 }
 
 void ResonatorAudioProcessorEditor::setFrames()
 {
+    frames.clear();
     frames.resize((int)GuiFrame::numOfFrames);
     auto upperHeight = getHeight() * 3 / 10;
     auto lowerHeight = upperHeight;
@@ -125,17 +164,26 @@ void ResonatorAudioProcessorEditor::setFrames()
     auto upperSection = midSection.removeFromTop(upperHeight);
     auto lowerSection = midSection.removeFromBottom(lowerHeight);
     
-    frames[static_cast<int>(GuiFrame::freqControl)] = std::make_unique<juce::Rectangle<int>>(midSection);
-    frames[(int)GuiFrame::fineControl] = std::make_unique<juce::Rectangle<int>>(upperSection.removeFromLeft(getWidth()/2));
-    frames[(int)GuiFrame::qControl] = std::make_unique<juce::Rectangle<int>>(upperSection);
-    frames[(int)GuiFrame::gainControl] = std::make_unique<juce::Rectangle<int>>(lowerSection.removeFromRight(getWidth()/2));
-    frames[(int)GuiFrame::socialAndLogoObjects] = std::make_unique<juce::Rectangle<int>>(lowerSection);
-    
-    // check if there're no nullptr in the vector
+    frames[freqFrame] = std::make_unique<juce::Rectangle<int>>(midSection);
+    frames[fineFrame] = std::make_unique<juce::Rectangle<int>>(upperSection.removeFromLeft(getWidth()/2));
+    frames[qFrame] = std::make_unique<juce::Rectangle<int>>(upperSection);
+    frames[gainFrame] = std::make_unique<juce::Rectangle<int>>(lowerSection.removeFromRight(getWidth()/2));
+    frames[algorithmListFrame] = std::make_unique<juce::Rectangle<int>>(lowerSection.removeFromTop(lowerSection.getHeight() * 0.5f));
+    frames[linkButtonsFrame] = std::make_unique<juce::Rectangle<int>>(lowerSection);
+
     for (int i = 0; i < frames.size(); ++i)
     {
         assert (frames[i] != nullptr);
     }
    
+}
+
+void ResonatorAudioProcessorEditor::buttonClicked(juce::Button* button)
+{
+    
+}
+
+void ResonatorAudioProcessorEditor::buttonStateChanged(juce::Button* button)
+{
     
 }

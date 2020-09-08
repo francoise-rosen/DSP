@@ -43,30 +43,38 @@ public:
         g.drawEllipse(rx - rimThickness + outerRimOffset, ry - rimThickness + outerRimOffset, rw + rimThickness, rw + rimThickness, outerRimOffset);
         
         // draw the thumb
+        drawSliderThumb(g, radius, centreX, centreY, angle);
         
-    }
-    
-    void drawThumb()
-    {
-        juce::Path p;
-        
-        // shape
-       // float thumbLength =
-        
-        // transform (quadrilateral, triangle, rounded rectangle, rectangle)
     }
     
     juce::Colour getBackgroundColour() const {return colourSet[backgroundColour];}
+    juce::Colour getRimColour() const {return colourSet[textAndRimColour];}
+    
     void setBackgroundColour(juce::Colour colour)
     {
         colourSet[backgroundColour] = colour;
     }
     
     
-    
 private:
     enum {backgroundColour, textAndRimColour, guiObjectColour, numOfColours};
     std::array<juce::Colour, numOfColours> colourSet {juce::Colours::black, juce::Colours::whitesmoke, juce::Colours::darkblue};
+    
+    void drawSliderThumb(juce::Graphics& g, const float& radius, const float& centreX, const float& centreY, const float& angle)
+    {
+        juce::Path p;
+        
+        // shape
+        float sliderThumbLength = radius * 0.57f;
+        float sliderThumbWidth = sliderThumbLength * 0.1f;
+        p.addRoundedRectangle(-sliderThumbWidth * 0.5f, -radius, sliderThumbWidth, sliderThumbLength, 3.0f, 3.0f, true, true, false, true);
+        p.applyTransform(juce::AffineTransform::rotation(angle).translated(centreX, centreY));
+        
+        g.fillPath(p);
+        
+        // transform (quadrilateral, triangle, rounded rectangle, rectangle)
+    }
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResonLookAndFeel)
     
 };

@@ -131,7 +131,7 @@ private:
         setCoefficients();
     }
     
-    
+    // ACHTUNG! This is called from renderNextBlock(), must be noexcept!
     template <typename T>
     void Resonator<T>::setCoefficients()
     {
