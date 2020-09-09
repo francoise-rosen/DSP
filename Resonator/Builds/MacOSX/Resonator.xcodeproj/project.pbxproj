@@ -81,6 +81,10 @@
 			isa = PBXBuildFile;
 			fileRef = C41987BDCCD7FF84759964BA;
 		};
+		0CF5B010EC476F16834DEC6B = {
+			isa = PBXBuildFile;
+			fileRef = 03767A80F26FD6E791DCCA47;
+		};
 		30E18081643E1C77E93C222A = {
 			isa = PBXBuildFile;
 			fileRef = 1801CF16516342519832BC6E;
@@ -160,6 +164,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_VST_utils.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		03767A80F26FD6E791DCCA47 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = BinaryData.cpp;
+			path = ../../JuceLibraryCode/BinaryData.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		09379E929D0F846AF9FFC53C = {
 			isa = PBXFileReference;
 			lastKnownFileType = file.nib;
@@ -172,6 +183,13 @@
 			lastKnownFileType = sourcecode.cpp.cpp;
 			name = "include_juce_audio_plugin_client_VST3.cpp";
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp";
+			sourceTree = "SOURCE_ROOT";
+		};
+		0D37564A7306C250C4C2F6CD = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BinaryData.h;
+			path = ../../JuceLibraryCode/BinaryData.h;
 			sourceTree = "SOURCE_ROOT";
 		};
 		0FCD5CE2E945E9C77FE58835 = {
@@ -242,6 +260,13 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = JucePluginDefines.h;
 			path = ../../JuceLibraryCode/JucePluginDefines.h;
+			sourceTree = "SOURCE_ROOT";
+		};
+		2B90D5B470BE1670F632DD30 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "github_icon.png";
+			path = "../../Images/github_icon.png";
 			sourceTree = "SOURCE_ROOT";
 		};
 		3485681741A8267A6F84EC14 = {
@@ -419,6 +444,13 @@
 			path = "../../JuceLibraryCode/include_juce_gui_extra.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		B013F782C5E9C3B8A130BA28 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "soundcloud_icon.png";
+			path = "../../Images/soundcloud_icon.png";
+			sourceTree = "SOURCE_ROOT";
+		};
 		B397BE84E1D004BB4D2A1325 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
@@ -474,6 +506,13 @@
 			name = AudioToolbox.framework;
 			path = System/Library/Frameworks/AudioToolbox.framework;
 			sourceTree = SDKROOT;
+		};
+		D4F04124314684E852A6F181 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "instagram_icon.png";
+			path = "../../Images/instagram_icon.png";
+			sourceTree = "SOURCE_ROOT";
 		};
 		DB7EAB71000B3AC3E2FA9502 = {
 			isa = PBXFileReference;
@@ -545,6 +584,13 @@
 			path = System/Library/Frameworks/Accelerate.framework;
 			sourceTree = SDKROOT;
 		};
+		F50D50EDC03A8392AD3D8842 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "linkedin_icon.png";
+			path = "../../Images/linkedin_icon.png";
+			sourceTree = "SOURCE_ROOT";
+		};
 		FA986190A24C05A2ABB4B2AE = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -572,10 +618,22 @@
 			name = Source;
 			sourceTree = "<group>";
 		};
+		99015ABBADF3EBDA05577B9C = {
+			isa = PBXGroup;
+			children = (
+				2B90D5B470BE1670F632DD30,
+				D4F04124314684E852A6F181,
+				F50D50EDC03A8392AD3D8842,
+				B013F782C5E9C3B8A130BA28,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		502BDB80ACF4BEED450310CE = {
 			isa = PBXGroup;
 			children = (
 				E24507BF070527D49788385E,
+				99015ABBADF3EBDA05577B9C,
 			);
 			name = Resonator;
 			sourceTree = "<group>";
@@ -602,6 +660,8 @@
 		D280734780103C6A9E9CBD53 = {
 			isa = PBXGroup;
 			children = (
+				03767A80F26FD6E791DCCA47,
+				0D37564A7306C250C4C2F6CD,
 				1801CF16516342519832BC6E,
 				11CABE7CB411E158F86DAE60,
 				3FC2434985E4300A5557239D,
@@ -1929,6 +1989,7 @@
 			files = (
 				94A49AC3C5F1893DCAF5C43A,
 				CC95601451A3E05A13864497,
+				0CF5B010EC476F16834DEC6B,
 				30E18081643E1C77E93C222A,
 				10CDB8194FA830CD7FC3A870,
 				C05DFC3B0904DE4330E09E61,

@@ -16,7 +16,7 @@ ResonatorAudioProcessorEditor::ResonatorAudioProcessorEditor (ResonatorAudioProc
 
     setLookAndFeel(&resonLookAndFeel);
     initialiseSliders();
-    //initialiseLabels();
+    initialiseImageButtons();
 
     addAndMakeVisible(&algoBox);
     fillAlgoBox();
@@ -35,6 +35,7 @@ ResonatorAudioProcessorEditor::ResonatorAudioProcessorEditor (ResonatorAudioProc
 
 ResonatorAudioProcessorEditor::~ResonatorAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
 }
 
 //==============================================================================
@@ -42,7 +43,7 @@ ResonatorAudioProcessorEditor::~ResonatorAudioProcessorEditor()
 void ResonatorAudioProcessorEditor::fillAlgoBox()
 {
     // make a list of available band pass algorithms
-    assert (ResonatorAudioProcessor::listOfAlgorithms.size() == (int)sfd::FilterAlgorithm::numOfAlgorithms);
+    assert (ResonatorAudioProcessor::listOfAlgorithms.size() == static_cast<int>(sfd::FilterAlgorithm::numOfAlgorithms));
     for (int i = 0; i < (int)sfd::FilterAlgorithm::numOfAlgorithms; ++i){
         algoBox.addItem(ResonatorAudioProcessor::listOfAlgorithms[i], 100 + i);
     }
@@ -58,7 +59,6 @@ void ResonatorAudioProcessorEditor::initialiseSliders()
                                   );
         sliderArray[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
         sliderArray[i]->setLookAndFeel(&resonLookAndFeel);
-        
         addAndMakeVisible(*(sliderArray[i]));
     };
     
@@ -66,34 +66,46 @@ void ResonatorAudioProcessorEditor::initialiseSliders()
 
 void ResonatorAudioProcessorEditor::initialiseImageButtons()
 {
+    imageButtonArray.clear();
     
+    imageButtonArray.resize(numOfImageButtons);
+    
+    // github, instagram, linkedin, soundcloud
+    std::array<juce::Image, numOfImageButtons> images {
+        juce::ImageCache::getFromMemory(BinaryData::github_icon_png, BinaryData::github_icon_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::linkedin_icon_png, BinaryData::linkedin_icon_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::soundcloud_icon_png, BinaryData::soundcloud_icon_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::instagram_icon_png, BinaryData::instagram_icon_pngSize)
+    };
+    
+    juce::StringArray componentIDs {
+        "https://github.com/francoise-rosen",
+        "https://www.linkedin.com/in/stan-barvinsky/",
+        "https://soundcloud.com/francoise_rosen",
+        "https://www.instagram.com/francoise.rosen/?hl=en"
+    };
+    
+    assert (images.size() == imageButtonArray.size());
+    
+    for (int i = 0; i < imageButtonArray.size(); ++i)
+    {
+        imageButtonArray[i] = std::make_unique<juce::ImageButton>();
+        imageButtonArray[i]->setImages(false, true, true, images[i], 0.5f, juce::Colours::transparentWhite, images[i], 1.0f, juce::Colours::transparentWhite, images[i], 0.7f, juce::Colours::lightgrey);
+        imageButtonArray[i]->setComponentID(componentIDs[i]);
+        addAndMakeVisible(*imageButtonArray[i]);
+        imageButtonArray[i]->addListener(this);
+    }
+
 }
 
-//void ResonatorAudioProcessorEditor::initialiseLabels()
-//{
-//    labelArray.clear();
-//    labelArray.resize(numOfLabels);
-//    std::fill(labelArray.begin(), labelArray.end(), nullptr);
-//    labelArray[freqLabel] = std::make_unique<juce::Label>("FreqLabel", "FRe<Q>ueNCy");
-//    labelArray[fineLabel] = std::make_unique<juce::Label>("FineLabel", "FINe");
-//    labelArray[qLabel] = std::make_unique<juce::Label>("qLabel", "ReSONaNCe");
-//    labelArray[gainLabel] = std::make_unique<juce::Label>("gainLabel", "GaIN");
-//    for (int i = 0; i < labelArray.size(); ++i)
-//    {
-//        if (labelArray[i] != nullptr)
-//        {
-//            addAndMakeVisible(*labelArray[i]);
-//            labelArray[i]->setAlwaysOnTop(true);
-//        }
-//    }
-//}
 
 void ResonatorAudioProcessorEditor::attachParameters()
 {
     // attach the sliders to the AudioProcessorValueTreeState object
+    sliderAttachments.clear();
+    sliderAttachments.resize(sliderArray.size());
     for (int i = 0; i < sliderArray.size(); ++i)
     {
-        sliderAttachments.resize(sliderArray.size());
         sliderAttachments[i] = std::make_unique<SliderAttachment>(
             audioProcessor.getValueTree(),
              paramData::paramArray[i].getID(),
@@ -115,24 +127,59 @@ void ResonatorAudioProcessorEditor::attachParameters()
 //==============================================================================
 void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black);
-    resonLookAndFeel.setBackgroundColour(juce::Colours::black);
+    juce::Colour backgroundColour = juce::Colours::black;
+    g.fillAll (backgroundColour);
+    resonLookAndFeel.setBackgroundColour(backgroundColour);
     
     g.setColour (juce::Colours::gold.withBrightness(0.26f).withHue(1.72f));
     
-    setFrames();
+    if (frames.size() != numOfFrames)
+        setFrames();
     for (int i = 0; i < frames.size(); ++i)
     {
         g.drawRoundedRectangle(frames[i]->toFloat(), 7, 2);
     }
     
     // add lables
-    //g.setFont(juce::Font("", "Monaco", 21.0f));
+    g.setFont(juce::Font("Monaco", "Bold", fontHeight));
     g.setColour(resonLookAndFeel.getRimColour());
-    g.drawFittedText("FRe<Q>ENCy", frames[freqFrame]->reduced(edge * 2), juce::Justification::topRight, 1);
-    g.drawFittedText("ReSONANCe", frames[qFrame]->withLeft(frames[qFrame]->getX() - edge * 4).reduced(0, edge * 3), juce::Justification::topLeft, 1);
+    g.drawFittedText("Fre(Q)ueNCy", frames[freqFrame]->reduced(edge * 2), juce::Justification::topRight, 1);
+    g.drawFittedText("ReSONaNCe", frames[qFrame]->withLeft(frames[qFrame]->getX() - edge * 4).reduced(0, edge * 3), juce::Justification::topLeft, 1);
     g.drawFittedText("FINe", frames[fineFrame]->withRight(getWidth() * 0.67).withBottom(frames[fineFrame]->getBottom() - edge * 2), juce::Justification::bottomRight, 1);
     g.drawFittedText("GaIN", frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - edge), juce::Justification::topRight, 1);
+    
+    // freq line
+    juce::Path freqLinePath;
+    std::vector<juce::Point<float>> freqLinePoints
+    {
+        // Point 0
+        {frames[freqFrame]->getWidth() * 0.67f,
+            frames[freqFrame]->getY() + edge * 3 + fontHeight},
+        // Point 1
+        {frames[freqFrame]->getWidth() * 0.79f,
+            frames[freqFrame]->getY() + edge * 3 + fontHeight},
+        // Point 2
+        {frames[freqFrame]->getWidth() * 0.95f,
+            frames[freqFrame]->getY() + edge * 3 + fontHeight},
+        // Point 3
+        {getWidth() * 0.75f,
+            getHeight() * 0.5f},
+        // Point 4
+        {getWidth() * 0.72f,
+            getHeight() * 0.53f}
+        
+    };
+    juce::PathStrokeType freqArrowType {1.5f};
+    freqLinePath.startNewSubPath(freqLinePoints[0]);
+    freqLinePath.lineTo(freqLinePoints[1]);
+    //freqLinePath.lineTo(freqLinePoints[2]);
+    freqLinePath.quadraticTo(freqLinePoints[2], freqLinePoints[3]);
+    freqLinePath.lineTo(freqLinePoints[4]);
+    //freqLinePath.cubicTo(freqLinePoints[2], freqLinePoints[3], freqLinePoints[4]);
+    freqArrowType.createStrokeWithArrowheads(freqLinePath, freqLinePath, 1.0f, 30.0f, 5.0f, 35.0f);
+    juce::Path freqLinePathCurve = freqLinePath.createPathWithRoundedCorners(20.0f);
+    g.strokePath(freqLinePathCurve, freqArrowType);
+    
     
 }
 
@@ -148,16 +195,26 @@ void ResonatorAudioProcessorEditor::resized()
     
     // resize combobox
     algoBox.setBounds(frames[algorithmListFrame]->reduced(edge, edge * 3.5f));
+    fontHeight = getHeight() / 30.0f;
     
-//    const std::pair<int, int> smallLabelDim = std::make_pair<int, int>(getWidth()/4, getHeight()/10);
-//    labelArray[fineLabel]->setBounds(frames[fineFrame]->getBottom() - segmentLength * 0.25, getWidth() * 0.5, smallLabelDim.first, smallLabelDim.second);
+    
+    // buttons
+    auto buttonArea = *frames[linkButtonsFrame];
+    buttonArea.reduced(edge * 2);
+    auto buttonWidth = buttonArea.getWidth() / numOfImageButtons;
+    for (int i = 0; i < imageButtonArray.size(); ++i)
+    {
+        imageButtonArray[i]->setBounds(buttonArea.removeFromLeft(buttonWidth).reduced(edge * 1.5, edge * 2));
+    }
+    
+    repaint(); // resizes the font height
     
 }
 
 void ResonatorAudioProcessorEditor::setFrames()
 {
     frames.clear();
-    frames.resize((int)GuiFrame::numOfFrames);
+    frames.resize(numOfFrames);
     auto upperHeight = getHeight() * 3 / 10;
     auto lowerHeight = upperHeight;
     auto midSection = getLocalBounds();
@@ -180,6 +237,13 @@ void ResonatorAudioProcessorEditor::setFrames()
 
 void ResonatorAudioProcessorEditor::buttonClicked(juce::Button* button)
 {
+
+    juce::URL link {button->getComponentID()};
+    
+    if (link.isWellFormed())
+    {
+        link.launchInDefaultBrowser();
+    }
     
 }
 

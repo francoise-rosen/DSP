@@ -294,16 +294,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout ResonatorAudioProcessor::cre
         juce::AudioProcessorParameter::genericParameter,
         [](float val, int)
         {
-            if (val > -100.0f)
-            {
-                return juce::String(val, 3) + "dB";
-            }
-            
-            else
-            {
-                return juce::String("-inf");
-            }
-            
+//            if (val > -100.0f)
+//            {
+//                return juce::String(val, 3) + "dB";
+//            }
+//
+//            else
+//            {
+//                return juce::String("-inf");
+//            }
+            return (val > -100.0f) ? (juce::String(val, 3) + "dB") : "-inf";
             
         },
         [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}

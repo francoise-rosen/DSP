@@ -42,18 +42,17 @@ private:
     // GUI Objects
     ResonLookAndFeel resonLookAndFeel;
     enum SliderObject {freqSlider, fineTuneSlider, qSlider, gainSlider, numOfSliders};
-    //enum Labels {freqLabel, fineLabel, qLabel, gainLabel, numOfLabels};
     enum GuiFrame {freqFrame = 0, fineFrame, qFrame, gainFrame, algorithmListFrame, linkButtonsFrame, numOfFrames};
-    enum LinkObject {soundcloud, linkedIn, github, facebook};
+    enum imageObject {github, linkedIn, soundcloud, instagram, numOfImageButtons};
     std::vector<std::unique_ptr<juce::Slider>> sliderArray;
     std::vector<std::unique_ptr<juce::Label>> labelArray;
-    std::vector<std::unique_ptr<juce::ImageButton>> linkButtonArray;
+    std::vector<std::unique_ptr<juce::ImageButton>> imageButtonArray;
     juce::ComboBox algoBox;
     juce::TextButton bypassButton;
     
     void initialiseSliders();
     void initialiseImageButtons();
-    //void initialiseLabels();
+
     void fillAlgoBox();
     
     // Size parameters
@@ -61,6 +60,7 @@ private:
     const float segmentLength{90.0f};
     const float textBoxWidth{50.0f};
     const float textBoxHeight{25.0f};
+    float fontHeight {0.0f};
     std::vector<std::unique_ptr<juce::Rectangle<int>>> frames;
     void setFrames();
     
