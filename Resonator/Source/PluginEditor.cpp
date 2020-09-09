@@ -169,16 +169,21 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
             getHeight() * 0.53f}
         
     };
-    juce::PathStrokeType freqArrowType {1.5f};
-    freqLinePath.startNewSubPath(freqLinePoints[0]);
-    freqLinePath.lineTo(freqLinePoints[1]);
-    //freqLinePath.lineTo(freqLinePoints[2]);
-    freqLinePath.quadraticTo(freqLinePoints[2], freqLinePoints[3]);
+//    juce::PathStrokeType freqArrowType {1.0f};
+//    freqLinePath.startNewSubPath(freqLinePoints[0]);
+//    freqLinePath.lineTo(freqLinePoints[1]);
+//    //freqLinePath.lineTo(freqLinePoints[2]);
+//    freqLinePath.quadraticTo(freqLinePoints[2], freqLinePoints[3]);
+//    freqLinePath.lineTo(freqLinePoints[4]);
+//    //freqLinePath.cubicTo(freqLinePoints[2], freqLinePoints[3], freqLinePoints[4]);
+//    freqArrowType.createStrokeWithArrowheads(freqLinePath, freqLinePath, 1.0f, 30.0f, 3.0f, 35.0f);
+//    juce::Path freqLinePathCurve = freqLinePath.createPathWithRoundedCorners(20.0f);
+//    g.strokePath(freqLinePathCurve, freqArrowType);
+    freqLinePath.startNewSubPath(freqLinePoints[2]);
+    freqLinePath.cubicTo(freqLinePoints[1], freqLinePoints[0], freqLinePoints[3]);
     freqLinePath.lineTo(freqLinePoints[4]);
-    //freqLinePath.cubicTo(freqLinePoints[2], freqLinePoints[3], freqLinePoints[4]);
-    freqArrowType.createStrokeWithArrowheads(freqLinePath, freqLinePath, 1.0f, 30.0f, 5.0f, 35.0f);
-    juce::Path freqLinePathCurve = freqLinePath.createPathWithRoundedCorners(20.0f);
-    g.strokePath(freqLinePathCurve, freqArrowType);
+    juce::Path freqLinePathCurve = freqLinePath.createPathWithRoundedCorners(37.0f);
+    g.strokePath(freqLinePathCurve, juce::PathStrokeType(2.0f));
     
     
 }
