@@ -149,6 +149,7 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawFittedText("GaIN", frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - edge), juce::Justification::topRight, 1);
     
     // freq line
+    g.setColour(resonLookAndFeel.getRimColour().withAlpha(0.5f));
     juce::Path freqLinePath;
     std::vector<juce::Point<float>> freqLinePoints
     {
@@ -156,17 +157,20 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
         {frames[freqFrame]->getWidth() * 0.67f,
             frames[freqFrame]->getY() + edge * 3 + fontHeight},
         // Point 1
-        {frames[freqFrame]->getWidth() * 0.79f,
+        {frames[freqFrame]->getWidth() * 0.69f,
             frames[freqFrame]->getY() + edge * 3 + fontHeight},
         // Point 2
         {frames[freqFrame]->getWidth() * 0.95f,
             frames[freqFrame]->getY() + edge * 3 + fontHeight},
         // Point 3
-        {getWidth() * 0.75f,
-            getHeight() * 0.5f},
-        // Point 4
         {getWidth() * 0.72f,
-            getHeight() * 0.53f}
+            frames[freqFrame]->getY() + edge * 5 + fontHeight},
+        // Point 4
+        {getWidth() * 0.75f,
+            frames[freqFrame]->getY() + edge * 7 + fontHeight},
+        // Point 5
+        {getWidth() * 0.7f,
+            frames[freqFrame]->getY() + edge * 7 + fontHeight}
         
     };
 //    juce::PathStrokeType freqArrowType {1.0f};
@@ -181,9 +185,10 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
 //    g.strokePath(freqLinePathCurve, freqArrowType);
     freqLinePath.startNewSubPath(freqLinePoints[2]);
     freqLinePath.cubicTo(freqLinePoints[1], freqLinePoints[0], freqLinePoints[3]);
-    freqLinePath.lineTo(freqLinePoints[4]);
-    juce::Path freqLinePathCurve = freqLinePath.createPathWithRoundedCorners(37.0f);
-    g.strokePath(freqLinePathCurve, juce::PathStrokeType(2.0f));
+    freqLinePath.quadraticTo(freqLinePoints[4], freqLinePoints[5]);
+    //freqLinePath.lineTo(freqLinePoints[4]);
+    freqLinePath.createPathWithRoundedCorners(18.0f);
+    g.strokePath(freqLinePath, juce::PathStrokeType(1.0f));
     
     
 }

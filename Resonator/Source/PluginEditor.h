@@ -52,7 +52,6 @@ private:
     
     void initialiseSliders();
     void initialiseImageButtons();
-
     void fillAlgoBox();
     
     // Size parameters
@@ -66,9 +65,9 @@ private:
     
     // AudioProcessorValueTreeState attachments
     std::vector<std::unique_ptr<SliderAttachment>> sliderAttachments;
-    void attachParameters();
     std::unique_ptr<ComboBoxAttachment> algoBoxAttachment;
     std::unique_ptr<ButtonAttachment> bypassAttachment;
+    void attachParameters();
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResonatorAudioProcessorEditor)

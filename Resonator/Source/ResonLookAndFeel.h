@@ -72,7 +72,6 @@ private:
         
         g.fillPath(p);
         
-        // transform (quadrilateral, triangle, rounded rectangle, rectangle)
     }
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResonLookAndFeel)
