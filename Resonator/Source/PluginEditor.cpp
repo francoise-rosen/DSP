@@ -48,6 +48,7 @@ void ResonatorAudioProcessorEditor::fillAlgoBox()
 //        algoBox.addItem(ResonatorAudioProcessor::listOfAlgorithms[i], 100 + i);
 //    }
     algoBox.addItemList(ResonatorAudioProcessor::listOfAlgorithms, 100);
+    algoBox.setJustificationType(juce::Justification::centred);
 }
 
 void ResonatorAudioProcessorEditor::initialiseSliders()
@@ -156,8 +157,10 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
     g.setFont(juce::Font("Monaco", "Bold", fontHeight));
     g.setColour(resonLookAndFeel.getRimColour());
     g.drawFittedText("Fre(Q)ueNCy", frames[freqFrame]->reduced(edge * 2), juce::Justification::topRight, 1);
-    g.drawFittedText("ReSONaNCe", frames[qFrame]->withLeft(frames[qFrame]->getX() - edge * 4).reduced(0, edge * 3), juce::Justification::topLeft, 1);
-    g.drawFittedText("FINe", frames[fineFrame]->withRight(frames[fineFrame]->getWidth() * 1.1f).withBottom(frames[fineFrame]->getBottom() - edge * 2), juce::Justification::bottomRight, 1);
+        g.drawFittedText("ReSONaNCe", frames[qFrame]->withLeft(frames[qFrame]->getX() - edge * 4).reduced(0, edge * 3), juce::Justification::topLeft, 1);
+//    g.drawFittedText("ReSONaNCe", getLocalBounds().removeFromTop(getHeight() * 0.1f), juce::Justification::centred, 1);
+    g.drawFittedText("FINe", frames[fineFrame]->withRight(frames[fineFrame]->getRight() - edge).withBottom(frames[fineFrame]->getBottom() - edge * 2), juce::Justification::bottomRight, 1);
+//    g.drawFittedText("FINe", getLocalBounds().withBottom(frames[fineFrame]->getBottom() - edge * 2), juce::Justification::centred, 1);
     g.drawFittedText("GaIN", frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - edge), juce::Justification::topRight, 1);
     
     // freq line
@@ -199,6 +202,7 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
 void ResonatorAudioProcessorEditor::resized()
 {
     setFrames();
+    fontHeight = getHeight() / 30.0f;
     
     // resize sliders
     for (int i = 0; i < sliderArray.size(); ++i)
@@ -207,9 +211,8 @@ void ResonatorAudioProcessorEditor::resized()
     }
     
     // resize combobox
-    algoBox.setBounds(frames[algorithmListFrame]->reduced(edge * 3, edge * 4.5f));
-    fontHeight = getHeight() / 30.0f;
-    
+    algoBox.setBounds(frames[algorithmListFrame]->reduced(edge * 2.0f, edge * 3.0f));
+    //algoBox.setBounds(frames[algorithmListFrame]->reduced(edge, edge * 1.5f));
     
     // buttons
     auto buttonArea = *frames[linkButtonsFrame];

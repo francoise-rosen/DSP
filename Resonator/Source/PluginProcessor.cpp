@@ -11,7 +11,8 @@
 
 //==============================================================================
 
-juce::StringArray ResonatorAudioProcessor::listOfAlgorithms {"BiZTRans", "ANaLOgUe", "SMMMPLe", "SymmeTRiCAL"};
+juce::StringArray ResonatorAudioProcessor::listOfAlgorithms {"BiZTRans", "ANaLOgUe",
+    "SMMMPLe", "SymmeTRiCAL"};
 
 //==============================================================================
 ResonatorAudioProcessor::ResonatorAudioProcessor()

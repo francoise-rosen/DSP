@@ -50,12 +50,6 @@ public:
         
     }
     
-    // BUTTONS
-    void drawButtonBackground(juce::Graphics& g, juce::Button& button, const juce::Colour& background, bool highlighted, bool down) override
-    {
-        
-    }
-    
     // set combo box font
     juce::Font getComboBoxFont(juce::ComboBox& box) override
     {
@@ -72,21 +66,39 @@ public:
     void drawComboBox(juce::Graphics& g, int width, int height, bool down, int buttonX, int buttonY, int buttonW, int buttonH, juce::ComboBox& box) override
     {
         auto boxArea = box.getLocalBounds();
-        boxArea.reduced(width * 0.1f, height * 0.2f);
         
         // draw a "shadow"
-        float offset = height * 0.25f;
-        g.setColour(colourSet[textAndRimColour].darker());
-        g.drawRoundedRectangle(boxArea.withPosition(boxArea.getX() - 20, boxArea.getY() - 20).toFloat(), height * 0.1f, 6.0f);
+//        float offset = height * 0.25f;
+//        g.setColour(colourSet[textAndRimColour].darker());
+//        g.drawRoundedRectangle(boxArea.withPosition(boxArea.getX() - 2, boxArea.getY() - 22).toFloat(), height * 0.3f, 6.0f);
 
         g.setColour(colourSet[guiObjectColour].darker());
-        fontHeight = boxArea.getHeight() * 0.6f;
-        g.fillRoundedRectangle(boxArea.toFloat(), height * 0.25f);
-    
+        boxArea.reduced(width * 0.1f, height * 0.2f);
+        fontHeight = boxArea.getHeight() * 0.35f;
+        g.fillRoundedRectangle(boxArea.toFloat(), height * 0.05f);
+
         // draw pointer
+        g.setColour(colourSet[backgroundColour]);
+        juce::Path boxPointer;
+        boxPointer.startNewSubPath(boxArea.getRight() - boxArea.getWidth() * 0.2f, boxArea.getY() + boxArea.getHeight() * 0.45f);
+        boxPointer.lineTo(boxArea.getRight() - boxArea.getWidth() * 0.15f, boxArea.getY() + boxArea.getHeight() * 0.55f);
+        boxPointer.lineTo(boxArea.getRight() - boxArea.getWidth() * 0.1f, boxArea.getY() + boxArea.getHeight() * 0.45f);
+        boxPointer.closeSubPath();
+        g.fillPath(boxPointer);
+        
+        // outer rim
+        auto rim = boxArea.reduced(3.0f);
+        g.setColour(colourSet[backgroundColour].withAlpha(0.5f));
+        g.drawRoundedRectangle(rim.toFloat(), height * 0.05f, 5.0f);
         
 
     }
+    
+//    // set justification for the combotext
+//    void positionComboBoxText(juce::ComboBox& box, juce::Label& boxLabel) override
+//    {
+//        boxLabel.setBounds(box.getX() + 1, box.getY() + 1, box.getWidth() + 3 - box.getHeight(), box.getHeight() -2 );
+//    }
     
     juce::Colour getBackgroundColour() const {return colourSet[backgroundColour];}
     juce::Colour getRimColour() const {return colourSet[textAndRimColour];}
