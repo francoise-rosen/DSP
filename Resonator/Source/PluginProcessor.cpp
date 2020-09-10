@@ -11,7 +11,7 @@
 
 //==============================================================================
 
-juce::StringArray ResonatorAudioProcessor::listOfAlgorithms {"BZT", "Analogue", "Simple Resonator", "Symmetrical Resonator"};
+juce::StringArray ResonatorAudioProcessor::listOfAlgorithms {"BiZTRans", "ANaLOgUe", "SMMMPLe", "SymmeTRiCAL"};
 
 //==============================================================================
 ResonatorAudioProcessor::ResonatorAudioProcessor()
@@ -263,16 +263,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout ResonatorAudioProcessor::cre
          freqAtom.get(), "Hz",
          juce::AudioProcessorParameter::genericParameter,
          [](float val, int) {
-             if (val < 1000.0f)
-             {
-                 return juce::String(val, 2) + "Hz";
-             }
-             else
-             {
-                 return juce::String(val / 1000.0f, 2) + "kHz";
-             }
+             return (val < 1000.0f) ? (juce::String(val, 2) + "Hz") :
+                 (juce::String(val / 1000.0f, 2) + "kHz");
          },
-         [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}
+         [](const juce::String& str_value) {
+             return str_value.dropLastCharacters(3).getFloatValue();
+         }
         )
                    );
     parameters.add(
@@ -294,17 +290,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout ResonatorAudioProcessor::cre
         juce::AudioProcessorParameter::genericParameter,
         [](float val, int)
         {
-//            if (val > -100.0f)
-//            {
-//                return juce::String(val, 3) + "dB";
-//            }
-//
-//            else
-//            {
-//                return juce::String("-inf");
-//            }
-            return (val > -100.0f) ? (juce::String(val, 3) + "dB") : "-inf";
-            
+            return (val > -100.0f) ? (juce::String(val, 2) + "dB") : "-inf";
         },
         [](const juce::String& str_value) {return str_value.dropLastCharacters(3).getFloatValue();}
                                                 )

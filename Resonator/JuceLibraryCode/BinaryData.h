@@ -8,17 +8,17 @@
 
 namespace BinaryData
 {
-    extern const char*   github_icon_png;
-    const int            github_icon_pngSize = 2603;
+    extern const char*   github_square_black_png;
+    const int            github_square_black_pngSize = 15839;
 
-    extern const char*   instagram_icon_png;
-    const int            instagram_icon_pngSize = 170106;
+    extern const char*   instagram_square_black_png;
+    const int            instagram_square_black_pngSize = 16551;
 
-    extern const char*   linkedin_icon_png;
-    const int            linkedin_icon_pngSize = 6200;
+    extern const char*   linkedin_square_black_png;
+    const int            linkedin_square_black_pngSize = 9048;
 
-    extern const char*   soundcloud_icon_png;
-    const int            soundcloud_icon_pngSize = 76761;
+    extern const char*   soundcloud_square_black_png;
+    const int            soundcloud_square_black_pngSize = 9225;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
     const int namedResourceListSize = 4;

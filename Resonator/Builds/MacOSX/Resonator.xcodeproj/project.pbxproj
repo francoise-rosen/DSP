@@ -185,6 +185,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp";
 			sourceTree = "SOURCE_ROOT";
 		};
+		0CEC9ED3469BBDAB4D0887F9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "github_square_black.png";
+			path = "../../Images/github_square_black.png";
+			sourceTree = "SOURCE_ROOT";
+		};
 		0D37564A7306C250C4C2F6CD = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
@@ -255,18 +262,18 @@
 			path = System/Library/Frameworks/QuartzCore.framework;
 			sourceTree = SDKROOT;
 		};
+		29238662E8D86006E9C98C5A = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "linkedin_square_black.png";
+			path = "../../Images/linkedin_square_black.png";
+			sourceTree = "SOURCE_ROOT";
+		};
 		29EE076ADE4D2702953BE1E0 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = JucePluginDefines.h;
 			path = ../../JuceLibraryCode/JucePluginDefines.h;
-			sourceTree = "SOURCE_ROOT";
-		};
-		2B90D5B470BE1670F632DD30 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "github_icon.png";
-			path = "../../Images/github_icon.png";
 			sourceTree = "SOURCE_ROOT";
 		};
 		3485681741A8267A6F84EC14 = {
@@ -282,13 +289,6 @@
 			name = CoreAudioKit.framework;
 			path = System/Library/Frameworks/CoreAudioKit.framework;
 			sourceTree = SDKROOT;
-		};
-		3FC2434985E4300A5557239D = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.objcpp;
-			name = "include_juce_audio_formats.mm";
-			path = "../../JuceLibraryCode/include_juce_audio_formats.mm";
-			sourceTree = "SOURCE_ROOT";
 		};
 		4BBD25C9B43B9023B0243E28 = {
 			isa = PBXFileReference;
@@ -338,6 +338,13 @@
 			name = IOKit.framework;
 			path = System/Library/Frameworks/IOKit.framework;
 			sourceTree = SDKROOT;
+		};
+		3FC2434985E4300A5557239D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.objcpp;
+			name = "include_juce_audio_formats.mm";
+			path = "../../JuceLibraryCode/include_juce_audio_formats.mm";
+			sourceTree = "SOURCE_ROOT";
 		};
 		5970F1AC1372F0BC4B9560A9 = {
 			isa = PBXFileReference;
@@ -444,13 +451,6 @@
 			path = "../../JuceLibraryCode/include_juce_gui_extra.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
-		B013F782C5E9C3B8A130BA28 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "soundcloud_icon.png";
-			path = "../../Images/soundcloud_icon.png";
-			sourceTree = "SOURCE_ROOT";
-		};
 		B397BE84E1D004BB4D2A1325 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
@@ -507,13 +507,6 @@
 			path = System/Library/Frameworks/AudioToolbox.framework;
 			sourceTree = SDKROOT;
 		};
-		D4F04124314684E852A6F181 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "instagram_icon.png";
-			path = "../../Images/instagram_icon.png";
-			sourceTree = "SOURCE_ROOT";
-		};
 		DB7EAB71000B3AC3E2FA9502 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.xml;
@@ -549,11 +542,25 @@
 			path = "../../JuceLibraryCode/include_juce_data_structures.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		E13ABE57C7A6E0529C39E4DB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "instagram_square_black.png";
+			path = "../../Images/instagram_square_black.png";
+			sourceTree = "SOURCE_ROOT";
+		};
 		E16D5298D17B6444C23B9403 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			name = "include_juce_audio_plugin_client_Standalone.cpp";
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp";
+			sourceTree = "SOURCE_ROOT";
+		};
+		E1B2EFCC53D364C52B764F43 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "soundcloud_square_black.png";
+			path = "../../Images/soundcloud_square_black.png";
 			sourceTree = "SOURCE_ROOT";
 		};
 		E80551E82BD205B2AA549741 = {
@@ -583,13 +590,6 @@
 			name = Accelerate.framework;
 			path = System/Library/Frameworks/Accelerate.framework;
 			sourceTree = SDKROOT;
-		};
-		F50D50EDC03A8392AD3D8842 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "linkedin_icon.png";
-			path = "../../Images/linkedin_icon.png";
-			sourceTree = "SOURCE_ROOT";
 		};
 		FA986190A24C05A2ABB4B2AE = {
 			isa = PBXFileReference;
@@ -621,10 +621,10 @@
 		99015ABBADF3EBDA05577B9C = {
 			isa = PBXGroup;
 			children = (
-				2B90D5B470BE1670F632DD30,
-				D4F04124314684E852A6F181,
-				F50D50EDC03A8392AD3D8842,
-				B013F782C5E9C3B8A130BA28,
+				0CEC9ED3469BBDAB4D0887F9,
+				E13ABE57C7A6E0529C39E4DB,
+				29238662E8D86006E9C98C5A,
+				E1B2EFCC53D364C52B764F43,
 			);
 			name = Images;
 			sourceTree = "<group>";

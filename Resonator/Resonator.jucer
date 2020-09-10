@@ -16,13 +16,14 @@
             file="Source/ResonLookAndFeel.h"/>
     </GROUP>
     <GROUP id="{C9342C91-82EF-D4C1-75EB-44A393DD5100}" name="Images">
-      <FILE id="irOErL" name="github_icon.png" compile="0" resource="1" file="Images/github_icon.png"/>
-      <FILE id="kv0icf" name="instagram_icon.png" compile="0" resource="1"
-            file="Images/instagram_icon.png"/>
-      <FILE id="QrT8vm" name="linkedin_icon.png" compile="0" resource="1"
-            file="Images/linkedin_icon.png"/>
-      <FILE id="H34ajI" name="soundcloud_icon.png" compile="0" resource="1"
-            file="Images/soundcloud_icon.png"/>
+      <FILE id="uNCQ3w" name="github_square_black.png" compile="0" resource="1"
+            file="Images/github_square_black.png"/>
+      <FILE id="sBMjtz" name="instagram_square_black.png" compile="0" resource="1"
+            file="Images/instagram_square_black.png"/>
+      <FILE id="YdgF8Q" name="linkedin_square_black.png" compile="0" resource="1"
+            file="Images/linkedin_square_black.png"/>
+      <FILE id="agtzxC" name="soundcloud_square_black.png" compile="0" resource="1"
+            file="Images/soundcloud_square_black.png"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

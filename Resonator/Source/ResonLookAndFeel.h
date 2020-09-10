@@ -18,6 +18,9 @@ public:
     {
         setColour(juce::Slider::thumbColourId, colourSet[textAndRimColour]);
         setColour(juce::Slider::textBoxOutlineColourId, colourSet[backgroundColour]);
+        setColour(juce::ComboBox::outlineColourId, colourSet[backgroundColour].darker());
+        setColour(juce::ComboBox::backgroundColourId, colourSet[guiObjectColour]);
+        setColour(juce::PopupMenu::backgroundColourId, colourSet[backgroundColour].withAlpha(0.4f));
     }
     
     ~ResonLookAndFeel() {}
@@ -47,6 +50,44 @@ public:
         
     }
     
+    // BUTTONS
+    void drawButtonBackground(juce::Graphics& g, juce::Button& button, const juce::Colour& background, bool highlighted, bool down) override
+    {
+        
+    }
+    
+    // set combo box font
+    juce::Font getComboBoxFont(juce::ComboBox& box) override
+    {
+        return currentComboBoxFont();
+    }
+    
+    // set combo box popup font
+    
+    juce::Font getPopupMenuFont() override
+    {
+        return currentComboBoxFont();
+    }
+    
+    void drawComboBox(juce::Graphics& g, int width, int height, bool down, int buttonX, int buttonY, int buttonW, int buttonH, juce::ComboBox& box) override
+    {
+        auto boxArea = box.getLocalBounds();
+        boxArea.reduced(width * 0.1f, height * 0.2f);
+        
+        // draw a "shadow"
+        float offset = height * 0.25f;
+        g.setColour(colourSet[textAndRimColour].darker());
+        g.drawRoundedRectangle(boxArea.withPosition(boxArea.getX() - 20, boxArea.getY() - 20).toFloat(), height * 0.1f, 6.0f);
+
+        g.setColour(colourSet[guiObjectColour].darker());
+        fontHeight = boxArea.getHeight() * 0.6f;
+        g.fillRoundedRectangle(boxArea.toFloat(), height * 0.25f);
+    
+        // draw pointer
+        
+
+    }
+    
     juce::Colour getBackgroundColour() const {return colourSet[backgroundColour];}
     juce::Colour getRimColour() const {return colourSet[textAndRimColour];}
     
@@ -72,6 +113,13 @@ private:
         
         g.fillPath(p);
         
+    }
+    
+    int fontHeight {14};
+    
+    juce::Font currentComboBoxFont()
+    {
+        return juce::Font("Monaco", "Plain", fontHeight);
     }
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResonLookAndFeel)
