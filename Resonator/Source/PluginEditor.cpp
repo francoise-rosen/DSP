@@ -154,14 +154,17 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
     }
     
     // add lables
+    juce::Rectangle<int> resLabelRect {getWidth()/3, static_cast<int>(edge), getWidth()/3, static_cast<int>(edge * 2 + fontHeight)};
+    juce::Rectangle<int> fineLabelRect {getWidth()/3, static_cast<int>(frames[fineFrame]->getHeight() * 2.0f / 3.0f), static_cast<int>(frames[fineFrame]->getWidth() / 3.0f), resLabelRect.getHeight()};
+    juce::Rectangle<int> gainLabelRect {frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - fontHeight / 2).withRight(frames[gainFrame]->getRight() - edge * 2)};
+    
     g.setFont(juce::Font("Monaco", "Bold", fontHeight));
     g.setColour(resonLookAndFeel.getRimColour());
     g.drawFittedText("Fre(Q)ueNCy", frames[freqFrame]->reduced(edge * 2), juce::Justification::topRight, 1);
-        g.drawFittedText("ReSONaNCe", frames[qFrame]->withLeft(frames[qFrame]->getX() - edge * 4).reduced(0, edge * 3), juce::Justification::topLeft, 1);
-//    g.drawFittedText("ReSONaNCe", getLocalBounds().removeFromTop(getHeight() * 0.1f), juce::Justification::centred, 1);
-    g.drawFittedText("FINe", frames[fineFrame]->withRight(frames[fineFrame]->getRight() - edge).withBottom(frames[fineFrame]->getBottom() - edge * 2), juce::Justification::bottomRight, 1);
-//    g.drawFittedText("FINe", getLocalBounds().withBottom(frames[fineFrame]->getBottom() - edge * 2), juce::Justification::centred, 1);
-    g.drawFittedText("GaIN", frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - edge), juce::Justification::topRight, 1);
+    g.drawFittedText("ReSONaNCe", resLabelRect, juce::Justification::centred, 1);
+    g.drawFittedText("FINe", fineLabelRect, juce::Justification::centred, 1);
+//    g.drawFittedText("GaIN", frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - edge), juce::Justification::topRight, 1);
+    g.drawFittedText("GaIN", gainLabelRect, juce::Justification::topRight, 1);
     
     // freq line
     g.setColour(resonLookAndFeel.getRimColour().withAlpha(0.5f));
