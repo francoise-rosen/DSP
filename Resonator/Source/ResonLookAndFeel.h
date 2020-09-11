@@ -39,8 +39,12 @@ public:
         
         g.setColour(colourSet[guiObjectColour].darker());
         g.fillEllipse(rx, ry, rw, rw);
+        
+        // this is the vertical surface of the slider
         g.setColour(colourSet[backgroundColour]);
         g.drawEllipse(rx, ry, rw, rw, rimThickness);
+        
+        // this is the outer-bottom rim
         g.setColour(colourSet[textAndRimColour].darker());
         float outerRimOffset = 3.0f;
         g.drawEllipse(rx - rimThickness + outerRimOffset, ry - rimThickness + outerRimOffset, rw + rimThickness, rw + rimThickness, outerRimOffset);
@@ -66,25 +70,20 @@ public:
     void drawComboBox(juce::Graphics& g, int width, int height, bool down, int buttonX, int buttonY, int buttonW, int buttonH, juce::ComboBox& box) override
     {
         auto boxArea = box.getLocalBounds();
-        
-        // draw a "shadow"
-//        float offset = height * 0.25f;
-//        g.setColour(colourSet[textAndRimColour].darker());
-//        g.drawRoundedRectangle(boxArea.withPosition(boxArea.getX() - 2, boxArea.getY() - 22).toFloat(), height * 0.3f, 6.0f);
 
         g.setColour(colourSet[guiObjectColour].darker());
         boxArea.reduced(width * 0.1f, height * 0.2f);
         fontHeight = boxArea.getHeight() * 0.35f;
         g.fillRoundedRectangle(boxArea.toFloat(), height * 0.05f);
 
-        // draw pointer
+        // draw the drop-down arrow
         g.setColour(colourSet[backgroundColour]);
-        juce::Path boxPointer;
-        boxPointer.startNewSubPath(boxArea.getRight() - boxArea.getWidth() * 0.2f, boxArea.getY() + boxArea.getHeight() * 0.45f);
-        boxPointer.lineTo(boxArea.getRight() - boxArea.getWidth() * 0.15f, boxArea.getY() + boxArea.getHeight() * 0.55f);
-        boxPointer.lineTo(boxArea.getRight() - boxArea.getWidth() * 0.1f, boxArea.getY() + boxArea.getHeight() * 0.45f);
-        boxPointer.closeSubPath();
-        g.fillPath(boxPointer);
+        juce::Path dropDownArrow;
+        dropDownArrow.startNewSubPath(boxArea.getRight() - boxArea.getWidth() * 0.2f, boxArea.getY() + boxArea.getHeight() * 0.45f);
+        dropDownArrow.lineTo(boxArea.getRight() - boxArea.getWidth() * 0.15f, boxArea.getY() + boxArea.getHeight() * 0.55f);
+        dropDownArrow.lineTo(boxArea.getRight() - boxArea.getWidth() * 0.1f, boxArea.getY() + boxArea.getHeight() * 0.45f);
+        dropDownArrow.closeSubPath();
+        g.fillPath(dropDownArrow);
         
         // outer rim
         auto rim = boxArea.reduced(3.0f);
@@ -94,14 +93,16 @@ public:
 
     }
     
-//    // set justification for the combotext
-//    void positionComboBoxText(juce::ComboBox& box, juce::Label& boxLabel) override
-//    {
-//        boxLabel.setBounds(box.getX() + 1, box.getY() + 1, box.getWidth() + 3 - box.getHeight(), box.getHeight() -2 );
-//    }
-    
-    juce::Colour getBackgroundColour() const {return colourSet[backgroundColour];}
-    juce::Colour getRimColour() const {return colourSet[textAndRimColour];}
+    juce::Colour getBackgroundColour() const
+    {
+        return colourSet[backgroundColour];
+        
+    }
+    juce::Colour getRimColour() const
+    {
+        return colourSet[textAndRimColour];
+        
+    }
     
     void setBackgroundColour(juce::Colour colour)
     {

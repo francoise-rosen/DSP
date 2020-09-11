@@ -163,7 +163,6 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawFittedText("Fre(Q)ueNCy", frames[freqFrame]->reduced(edge * 2), juce::Justification::topRight, 1);
     g.drawFittedText("ReSONaNCe", resLabelRect, juce::Justification::centred, 1);
     g.drawFittedText("FINe", fineLabelRect, juce::Justification::centred, 1);
-//    g.drawFittedText("GaIN", frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - edge), juce::Justification::topRight, 1);
     g.drawFittedText("GaIN", gainLabelRect, juce::Justification::topRight, 1);
     
     // freq line
@@ -188,17 +187,63 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
             frames[freqFrame]->getY() + edge * 7 + fontHeight},
         // Point 5
         {getWidth() * 0.7f,
-            frames[freqFrame]->getY() + edge * 7 + fontHeight}
+            frames[freqFrame]->getY() + edge * 7 + fontHeight * 1.5f}
         
     };
 
     freqLinePath.startNewSubPath(freqLinePoints[2]);
     freqLinePath.cubicTo(freqLinePoints[1], freqLinePoints[0], freqLinePoints[3]);
     freqLinePath.quadraticTo(freqLinePoints[4], freqLinePoints[5]);
-    freqLinePath.createPathWithRoundedCorners(18.0f);
+    //freqLinePath = freqLinePath.createPathWithRoundedCorners(8.0f);
     g.strokePath(freqLinePath, juce::PathStrokeType(1.0f));
     
     // fine line
+    
+    std::vector<juce::Point<float>> finePathPoints
+    {
+        fineLabelRect.getBottomRight().translated(-fineLabelRect.getWidth()/3.0f, 0).toFloat(),
+        fineLabelRect.getBottomLeft().toFloat(),
+        fineLabelRect.getBottomLeft().translated(-fineLabelRect.getWidth() * 0.05f, 0).toFloat(),
+        fineLabelRect.getTopLeft().translated(-fineLabelRect.getWidth() * 0.15f, fineLabelRect.getWidth() * 0.5f).toFloat(),
+        fineLabelRect.getTopLeft().translated(-fineLabelRect.getWidth() * 0.05f, 0).toFloat(),
+        fineLabelRect.getCentre().translated(0, -fineLabelRect.getHeight() * 0.5f).toFloat(),
+        fineLabelRect.getCentre().translated(0, -fineLabelRect.getHeight() * 0.75f).toFloat(),
+        fineLabelRect.getTopLeft().translated(fineLabelRect.getWidth() * 0.2f, -fineLabelRect.getHeight() * 0.85f).toFloat()
+    };
+    
+    juce::Path finePath;
+    finePath.startNewSubPath(finePathPoints[0]);
+//    for (int i = 1; i < finePathPoints.size(); ++i)
+//    {
+//        finePath.lineTo(finePathPoints[i]);
+//    }
+    finePath.lineTo(finePathPoints[1]);
+    finePath.cubicTo(finePathPoints[2], finePathPoints[3], finePathPoints[4]);
+    finePath.cubicTo(finePathPoints[5], finePathPoints[6], finePathPoints[7]);
+    //finePath = finePath.createPathWithRoundedCorners(18.0f);
+    g.strokePath(finePath, juce::PathStrokeType{1.0f});
+    
+    std::vector<juce::Point<float>> resLinePath
+    {
+        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.29f, 0).toFloat(),
+        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.5f, 0).toFloat(),
+        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.75f, 0).toFloat(),
+        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.7f, resLabelRect.getBottom() * 0.25f).toFloat(),
+        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.57f, resLabelRect.getBottom() * 0.5f).toFloat(),
+        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.79f, resLabelRect.getBottom() * 0.75f).toFloat()
+    };
+    
+    juce::Path qPath;
+    qPath.startNewSubPath(resLinePath[0]);
+//    for (int i = 1; i  < resLinePath.size(); ++i)
+//    {
+//        qPath.lineTo(resLinePath[i]);
+//    }
+    qPath.cubicTo(resLinePath[1], resLinePath[2], resLinePath[3]);
+    qPath.quadraticTo(resLinePath[4], resLinePath[5]);
+    
+    //qPath = qPath.createPathWithRoundedCorners(21.0f);
+    g.strokePath(qPath, juce::PathStrokeType{1.0f});
 
 }
 
