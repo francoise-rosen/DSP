@@ -154,97 +154,192 @@ void ResonatorAudioProcessorEditor::paint (juce::Graphics& g)
     }
     
     // add lables
-    juce::Rectangle<int> resLabelRect {getWidth()/3, static_cast<int>(edge), getWidth()/3, static_cast<int>(edge * 2 + fontHeight)};
-    juce::Rectangle<int> fineLabelRect {getWidth()/3, static_cast<int>(frames[fineFrame]->getHeight() * 2.0f / 3.0f), static_cast<int>(frames[fineFrame]->getWidth() / 3.0f), resLabelRect.getHeight()};
-    juce::Rectangle<int> gainLabelRect {frames[gainFrame]->withTop(frames[freqFrame]->getBottom() - fontHeight / 2).withRight(frames[gainFrame]->getRight() - edge * 2)};
+    juce::Rectangle<int> resLabelRect {
+        static_cast<int>(frames[qFrame]->getX() - frames[qFrame]->getWidth() * 0.25f),
+        static_cast<int>(edge * 2),
+        static_cast<int>(frames[qFrame]->getWidth() * 0.5f),
+        static_cast<int>(fontHeight + edge * 2)
+    };
+
+    juce::Rectangle<int> fineLabelRect {
+        static_cast<int>(frames[fineFrame]->getWidth() * 0.75f - edge * 2),
+        static_cast<int>(frames[fineFrame]->getBottom() - (fontHeight + edge * 2)),
+        static_cast<int>(frames[fineFrame]->getWidth() * 0.25f),
+        static_cast<int>(fontHeight + edge * 2)
+    };
+    fineLabelRect.translate(edge * 2, - juce::jmin(20, frames[fineFrame]->getHeight() / 5));
+    
+    juce::Rectangle<int> gainLabelRect {
+        frames[gainFrame]->withTop (frames[freqFrame]->getBottom() - fontHeight / 2).withRight(frames[gainFrame]->getRight() - edge * 2)
+        
+    };
     
     g.setFont(juce::Font("Monaco", "Bold", fontHeight));
     g.setColour(resonLookAndFeel.getRimColour());
+   // g.drawRect(resLabelRect);
+   // g.drawRect(fineLabelRect);
     g.drawFittedText("Fre(Q)ueNCy", frames[freqFrame]->reduced(edge * 2), juce::Justification::topRight, 1);
     g.drawFittedText("ReSONaNCe", resLabelRect, juce::Justification::centred, 1);
     g.drawFittedText("FINe", fineLabelRect, juce::Justification::centred, 1);
     g.drawFittedText("GaIN", gainLabelRect, juce::Justification::topRight, 1);
     
-    // freq line
-    g.setColour(resonLookAndFeel.getRimColour().withAlpha(0.5f));
-    juce::Path freqLinePath;
+    /* frequency label -> dial pointer */
+    
+    auto rightX = frames[freqFrame]->getRight();
+    auto topY = frames[freqFrame]->getY();
     std::vector<juce::Point<float>> freqLinePoints
     {
-        // Point 0
-        {frames[freqFrame]->getWidth() * 0.67f,
-            frames[freqFrame]->getY() + edge * 3 + fontHeight},
-        // Point 1
-        {frames[freqFrame]->getWidth() * 0.69f,
-            frames[freqFrame]->getY() + edge * 3 + fontHeight},
-        // Point 2
-        {frames[freqFrame]->getWidth() * 0.95f,
-            frames[freqFrame]->getY() + edge * 3 + fontHeight},
-        // Point 3
-        {getWidth() * 0.72f,
-            frames[freqFrame]->getY() + edge * 5 + fontHeight},
-        // Point 4
-        {getWidth() * 0.75f,
-            frames[freqFrame]->getY() + edge * 7 + fontHeight},
-        // Point 5
-        {getWidth() * 0.7f,
-            frames[freqFrame]->getY() + edge * 7 + fontHeight * 1.5f}
+        /* Point 0 */
+        {
+            rightX - edge * 2.0f,
+            topY + edge * 3 + fontHeight
+        },
+        /* Point 1 */
+        {
+            rightX * 0.72f,
+            topY + edge * 3 + fontHeight
+        },
+        /* Point 2 */
+        {
+            rightX * 0.69f,
+            topY + edge * 3 + fontHeight
+        },
+        /* Point 3 */
+        {
+            rightX * 0.72f,
+            topY + edge * 5 + fontHeight
+        },
+        /* Point 4 */
+        {
+            rightX * 0.75f,
+            topY + edge * 7 + fontHeight
+        },
+        /* Point 5 */
+        {
+            rightX * 0.7f,
+            topY + edge * 7 + fontHeight * 1.5f
+        },
+        /* Point 6 */
+        {
+            static_cast<float>(frames[freqFrame]->getCentreX()),
+            static_cast<float>(frames[freqFrame]->getCentreY())
+        }
+    };
+    
+    g.setColour (resonLookAndFeel.getRimColour().withAlpha(0.5f));
+    juce::Path freqLinePath;
+    freqLinePath.startNewSubPath (freqLinePoints[0]);
+    freqLinePath.lineTo (freqLinePoints[1]);
+    freqLinePath.quadraticTo (freqLinePoints[2], freqLinePoints[3]);
+    freqLinePath.cubicTo (freqLinePoints[4], freqLinePoints[5], freqLinePoints[6]);
+    g.strokePath (freqLinePath, juce::PathStrokeType(2.0f));
+    
+    /* fine tune label -> dial pointer */
+    
+    fineLabelRect.getRight();
+    
+    std::vector<juce::Point<float>> fineLinePoints
+    {
+        /* Point 0 */
+        {
+            static_cast<float>(fineLabelRect.getRight()),
+            static_cast<float>(fineLabelRect.getBottom())
+        },
+        /* Point 1 */
+        {
+            static_cast<float>(fineLabelRect.getX() + 10),
+            static_cast<float>(fineLabelRect.getBottom())
+        },
+        
+        /* Point 2 */
+        {
+            static_cast<float>(fineLabelRect.getX() - 10),
+            static_cast<float>(fineLabelRect.getBottom())
+        },
+        /* Point 3 */
+        {
+            static_cast<float>(fineLabelRect.getX() - fineLabelRect.getWidth() * 0.75f),
+            static_cast<float>(fineLabelRect.getBottom() - fineLabelRect.getHeight() * 0.5f)
+        },
+        /* Point 4 */
+        {
+            static_cast<float>(fineLabelRect.getX()),
+            static_cast<float>(fineLabelRect.getY())
+        },
+        /* Point 5 */
+        {
+            static_cast<float>(fineLabelRect.getCentreX()),
+            static_cast<float>(fineLabelRect.getY() - 10.0f)
+        },
+        /* Point 6 */
+        {
+            static_cast<float>(fineLabelRect.getX()),
+            static_cast<float>(fineLabelRect.getY() - fineLabelRect.getHeight())
+        },
+        /* Point 7 */
+        {
+            static_cast<float>(frames[fineFrame]->getCentreX()),
+            static_cast<float>(frames[fineFrame]->getCentreY())
+        }
         
     };
-
-    freqLinePath.startNewSubPath(freqLinePoints[2]);
-    freqLinePath.cubicTo(freqLinePoints[1], freqLinePoints[0], freqLinePoints[3]);
-    freqLinePath.quadraticTo(freqLinePoints[4], freqLinePoints[5]);
-    //freqLinePath = freqLinePath.createPathWithRoundedCorners(8.0f);
-    g.strokePath(freqLinePath, juce::PathStrokeType(1.0f));
     
-    // fine line
+    juce::Path fineLinePath;
+    fineLinePath.startNewSubPath (fineLinePoints[0]);
+    fineLinePath.lineTo (fineLinePoints[1]);
+    fineLinePath.cubicTo (fineLinePoints[2], fineLinePoints[3], fineLinePoints[4]);
+    fineLinePath.cubicTo (fineLinePoints[5], fineLinePoints[6], fineLinePoints[7]);
+    g.strokePath (fineLinePath, juce::PathStrokeType(2.0f));
     
-    std::vector<juce::Point<float>> finePathPoints
+    /* resonance label -> dial pointer */
+    
+    std::vector<juce::Point<float>> resLinePoints
     {
-        fineLabelRect.getBottomRight().translated(-fineLabelRect.getWidth()/3.0f, 0).toFloat(),
-        fineLabelRect.getBottomLeft().toFloat(),
-        fineLabelRect.getBottomLeft().translated(-fineLabelRect.getWidth() * 0.05f, 0).toFloat(),
-        fineLabelRect.getTopLeft().translated(-fineLabelRect.getWidth() * 0.15f, fineLabelRect.getWidth() * 0.5f).toFloat(),
-        fineLabelRect.getTopLeft().translated(-fineLabelRect.getWidth() * 0.05f, 0).toFloat(),
-        fineLabelRect.getCentre().translated(0, -fineLabelRect.getHeight() * 0.5f).toFloat(),
-        fineLabelRect.getCentre().translated(0, -fineLabelRect.getHeight() * 0.75f).toFloat(),
-        fineLabelRect.getTopLeft().translated(fineLabelRect.getWidth() * 0.2f, -fineLabelRect.getHeight() * 0.85f).toFloat()
+        /* Point 0 */
+        {
+            static_cast<float>(resLabelRect.getX()),
+            static_cast<float>(resLabelRect.getBottom())
+        },
+        /* Point 1 */
+        {
+            static_cast<float>(resLabelRect.getRight() - 20),
+            static_cast<float>(resLabelRect.getBottom())
+        },
+        /* Point 1 */
+        {
+            static_cast<float>(resLabelRect.getRight()),
+            static_cast<float>(resLabelRect.getBottom())
+        },
+        /* Point 3 */
+        {
+            static_cast<float>(resLabelRect.getRight() - resLabelRect.getWidth() * 0.25f),
+            static_cast<float>(resLabelRect.getBottom() + fontHeight / 2)
+        },
+        /* Point 4 */
+        {
+            static_cast<float>(resLabelRect.getRight() - resLabelRect.getWidth() * 0.35f),
+            static_cast<float>(resLabelRect.getBottom() + fontHeight)
+        },
+        /* Point 5 */
+        {
+            static_cast<float>(resLabelRect.getRight() - resLabelRect.getWidth() * 0.25f),
+            static_cast<float>(resLabelRect.getBottom() + fontHeight + edge)
+        },
+        /* Point 6 */
+        {
+            static_cast<float>(resLabelRect.getRight() - resLabelRect.getWidth() * 0.15f),
+            static_cast<float>(resLabelRect.getBottom() + fontHeight + edge * 2)
+        }
+                               
     };
     
-    juce::Path finePath;
-    finePath.startNewSubPath(finePathPoints[0]);
-//    for (int i = 1; i < finePathPoints.size(); ++i)
-//    {
-//        finePath.lineTo(finePathPoints[i]);
-//    }
-    finePath.lineTo(finePathPoints[1]);
-    finePath.cubicTo(finePathPoints[2], finePathPoints[3], finePathPoints[4]);
-    finePath.cubicTo(finePathPoints[5], finePathPoints[6], finePathPoints[7]);
-    //finePath = finePath.createPathWithRoundedCorners(18.0f);
-    g.strokePath(finePath, juce::PathStrokeType{1.0f});
+    juce::Path resLinePath;
+    resLinePath.startNewSubPath(resLinePoints[0]);
+    resLinePath.lineTo(resLinePoints[1]);
+    resLinePath.quadraticTo(resLinePoints[2], resLinePoints[3]);
+    resLinePath.cubicTo(resLinePoints[4], resLinePoints[5], resLinePoints[6]);
+    g.strokePath(resLinePath, juce::PathStrokeType(2.0f));
     
-    std::vector<juce::Point<float>> resLinePath
-    {
-        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.29f, 0).toFloat(),
-        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.5f, 0).toFloat(),
-        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.75f, 0).toFloat(),
-        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.7f, resLabelRect.getBottom() * 0.25f).toFloat(),
-        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.57f, resLabelRect.getBottom() * 0.5f).toFloat(),
-        resLabelRect.getBottomLeft().translated(resLabelRect.getWidth() * 0.79f, resLabelRect.getBottom() * 0.75f).toFloat()
-    };
-    
-    juce::Path qPath;
-    qPath.startNewSubPath(resLinePath[0]);
-//    for (int i = 1; i  < resLinePath.size(); ++i)
-//    {
-//        qPath.lineTo(resLinePath[i]);
-//    }
-    qPath.cubicTo(resLinePath[1], resLinePath[2], resLinePath[3]);
-    qPath.quadraticTo(resLinePath[4], resLinePath[5]);
-    
-    //qPath = qPath.createPathWithRoundedCorners(21.0f);
-    g.strokePath(qPath, juce::PathStrokeType{1.0f});
-
 }
 
 void ResonatorAudioProcessorEditor::resized()

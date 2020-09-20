@@ -17,7 +17,7 @@ public:
     ResonLookAndFeel()
     {
         setColour(juce::Slider::thumbColourId, colourSet[textAndRimColour]);
-        setColour(juce::Slider::textBoxOutlineColourId, colourSet[backgroundColour]);
+        setColour(juce::Slider::textBoxOutlineColourId, colourSet[backgroundColour].withAlpha(0.0f));
         setColour(juce::ComboBox::outlineColourId, colourSet[backgroundColour].darker());
         setColour(juce::ComboBox::backgroundColourId, colourSet[guiObjectColour]);
         setColour(juce::PopupMenu::backgroundColourId, colourSet[backgroundColour].withAlpha(0.4f));

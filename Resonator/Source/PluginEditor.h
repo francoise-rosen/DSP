@@ -56,7 +56,7 @@ private:
     
     // Size parameters
     const float edge{5.0f};
-    const float segmentLength{90.0f};
+    const float segmentLength{130.0f};
     const float textBoxWidth{50.0f};
     const float textBoxHeight{25.0f};
     float fontHeight {0.0f};
