@@ -21,10 +21,10 @@ inline double sgn(double inpt)
 }
 
 template <typename T>
-T linearScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax);
+T linearScale (T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax);
 
 template<typename T>
-T expScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax, const T expFactor);
+T expScale (T& valueToScale, const T inMin, const T inMax, const T outMin, const T outMax, const T expFactor);
 
 class TransferFunction
 {
@@ -33,10 +33,10 @@ public:
     TransferFunction()
     :min(MIN), // no modulation
     max(MAX),// max modulation
-    currentFunction(Functions::tanh)
+    currentFunction (Functions::tanh)
     {}
 
-    
+    /** Basic functions. */
     enum Functions
     {
         tanh,
@@ -47,28 +47,24 @@ public:
         numFunctions
     };
     
-
-    // this one is too quiet, why?
-    forcedinline double halfCos(double& x, double index, double sym=0) noexcept
+    
+    forcedinline double halfCos (double& x, double index, double sym=0) noexcept
     {
         double localIndex = expScale(index, min, max, 1.0, 2.0, 3.0);
         double threshold = HALFPI * localIndex;
-        double sample = linearScale(x, MINRANGE, MAXRANGE, -threshold, threshold);
-        // deal with symmetry
+        double sample = linearScale (x, MINRANGE, MAXRANGE, -threshold, threshold);
         
-        sample = std::cos(sample + HALFPI);
+        sample = std::cos (sample + HALFPI);
         return sample;
     }
     
-    // this one nicely grows to distortion
-    // dc offset if sym changed, audible w/o signal on input
     forcedinline double sfdsine(double& x, double index, double sym=0) noexcept
     {
         index = expScale(index, min, max, 0.1, 10.0, 4.0);
         double sample = linearScale(x, MINRANGE, MAXRANGE, -HALFPI, HALFPI);
 
-        sample = std::sin(
-                          sample + std::sin(
+        sample = std::sin (
+                          sample + std::sin (
                                             sample * index + sym * std::cos (
                                                                             sample * index
                                                                              )
@@ -77,10 +73,8 @@ public:
         return sample;
     }
     
-
     forcedinline double sfdtanh(double& x, double index, double sym=1) noexcept
     {
-        // processing
         index = expScale(index, min, max, 1.0, 5.0, 2.0);
         auto sample = std::tanh(x * index) / std::tanh(index * 2.0);
         return sample;
@@ -93,23 +87,20 @@ public:
         return sample;
     }
     
-    
-    // use static?
     forcedinline double sfdClip(double x, double index, double sym=1) noexcept
     {
         
         index = expScale(index, min, max, 0.75, 1.25, 0.75);
         double sample = x * index;
         if(std::abs(sample) > 1) sample = sgn(sample) * 2/3;
-        if(std::abs(sample) <= 1) sample -= (std::pow(sample, 3) / 3); // wrong for negative values?
+        if(std::abs(sample) <= 1) sample -= (std::pow(sample, 3) / 3);
         
         // normalise
         sample *= 3 / 2;
       
         return sample;
     }
-    
-    // experiment with coefs here!
+
     forcedinline double sfdClipCascade3f(double x, double index, double sym=1) noexcept
     {
         double sample = sfdClip(
@@ -121,8 +112,6 @@ public:
         return sample;
     };
     
-   
-    
     forcedinline double transform(Functions func, double& x, double index, double sym)
     {
         double sample;
@@ -130,29 +119,22 @@ public:
         {
             case tanh:
                 sample = sfdtanh(x, index, sym);
-                std::cout << "tanh called\n";
                 break;
             case cos:
                 sample = halfCos(x, index, sym);
-                std::cout << "cos called\n";
                 break;
             case sfdSine:
                 sample = sfdsine(x, index, sym);
-                std::cout << "sine called\n";
                 break;
             case softClipper:
                 sample = sfdClip(x, index, sym);
-                std::cout << "clip called\n";
                 break;
             case softClipperCascade3:
                 sample = sfdClipCascade3f(x, index, sym);
-                std::cout << "clip cascade called\n";
                 break;
             default:
                 return x;
-                
         }
-        
         return sample;
     }
     
@@ -161,8 +143,7 @@ private:
     double min;
     double max;
     Functions currentFunction;
-
-    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransferFunction)
 };
 
 template <typename T>
@@ -189,8 +170,6 @@ T expScale(T& valueToScale, const T inMin, const T inMax, const T outMin, const 
     
     T value = valueToScale;
     if(expFactor == static_cast<T>(1)) return linearScale(valueToScale, inMin, inMax, outMin, outMax);
-    
-    // assume the input range is 0 - 1 (otherwise we may need to scale it first
     if(!(inMin == static_cast<T>(MIN) && inMax == static_cast<T>(MAX)))
     {
         T localMin = static_cast<T>(MIN);

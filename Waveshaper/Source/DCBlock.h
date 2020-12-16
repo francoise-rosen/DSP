@@ -9,7 +9,7 @@
     Simple one zero / one pole topology for a DCblocker filter
     Zero is constant 1 and so omitted 
     Pole for DCblock object must be set in range 0.995-0.997, 
-    otherwise it's just a HPF
+    otherwise it's just a high pass filter
 
   ==============================================================================
 */
@@ -26,14 +26,12 @@ public:
 
     float process(float inputSample) noexcept
     {
-    // oversample here?
     float output = inputSample - x + y * pole;
     x = inputSample; // xz-1
     y = output;      // yz-1
     return output;
 }
     
-
 private:
     float x;
     float y;

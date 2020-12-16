@@ -44,8 +44,8 @@ WaveshaperAudioProcessor::WaveshaperAudioProcessor()
 
 #endif
         mainGain(0.0),
-        parameters(*this,  // add to this processor
-                  nullptr, // ?
+        parameters(*this,
+                  nullptr,
                   "PARAMETER", // identifier
                   {std::make_unique<AudioParameterFloat> (paramGain,
                                                           GAIN_NAME,
@@ -199,7 +199,7 @@ bool WaveshaperAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 
 void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-    ScopedNoDenormals noDenormals; // ?
+    ScopedNoDenormals noDenormals;
     
     // consider mono -> stereo, stereo -> stereo
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -215,7 +215,6 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     crossfade = *parameters.getRawParameterValue(paramCrossfade);
     choiceA = *parameters.getRawParameterValue(paramTransferFunctionListA);
     choiceB = *parameters.getRawParameterValue(paramTransferFunctionListB);
-
     
     if ( localTargetGain != mainGain)
     {
@@ -249,9 +248,7 @@ void WaveshaperAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
                 double a = transferFunction_A.transform(static_cast<TransferFunction::Functions>(choiceA), sample, saturation, symmetry);
                 double b = transferFunction_B.transform(static_cast<TransferFunction::Functions>(choiceB), sample, saturation, symmetry);
                 channelData[i] = dcblock[channel]->process(mix(a, b, (double)crossfade) * Decibels::decibelsToGain(mainGain));
-             
             }
-            
         }
     }
 }
@@ -304,7 +301,6 @@ double WaveshaperAudioProcessor::getGain() const
     return mainGain;
 }
                       
-
 AudioProcessorValueTreeState& WaveshaperAudioProcessor::accessTreeState()
 {
     return parameters;

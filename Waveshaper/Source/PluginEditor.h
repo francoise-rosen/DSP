@@ -25,7 +25,6 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
-
 private:
  
     Slider gainSlider;
@@ -36,18 +35,15 @@ private:
     Slider crossfadeSlider;
     const float gap{10};
 
-    
     WaveshaperAudioProcessor& processor;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveshaperAudioProcessorEditor)
     
     // connection between slider and parameter in tree state
-    // if this pointer deleted, the connection brakes
-    // don't delete the slider object or AudioProcessorTreeState object before this one!
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainSliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> saturationSliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> symmetrySliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> crossfadeSliderAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> functions_A_ComboAttachment;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> functions_B_ComboAttachment;
+    
+     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveshaperAudioProcessorEditor)
 };

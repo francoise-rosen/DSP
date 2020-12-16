@@ -44,24 +44,21 @@ void ResonatorAudioProcessorEditor::fillAlgoBox()
 {
     // make a list of available band pass algorithms
     assert (ResonatorAudioProcessor::listOfAlgorithms.size() == static_cast<int>(sfd::FilterAlgorithm::numOfAlgorithms));
-//    for (int i = 0; i < (int)sfd::FilterAlgorithm::numOfAlgorithms; ++i){
-//        algoBox.addItem(ResonatorAudioProcessor::listOfAlgorithms[i], 100 + i);
-//    }
-    algoBox.addItemList(ResonatorAudioProcessor::listOfAlgorithms, 100);
-    algoBox.setJustificationType(juce::Justification::centred);
+    algoBox.addItemList (ResonatorAudioProcessor::listOfAlgorithms, 100);
+    algoBox.setJustificationType (juce::Justification::centred);
 }
 
 void ResonatorAudioProcessorEditor::initialiseSliders()
 {
     for (int i = 0; i < numOfSliders; ++i)
     {
-        sliderArray.push_back(std::make_unique<juce::Slider>(
+        sliderArray.push_back (std::make_unique<juce::Slider> (
             juce::Slider::SliderStyle::Rotary, juce::Slider::TextBoxBelow
                                                                  )
                                   );
-        sliderArray[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
-        sliderArray[i]->setLookAndFeel(&resonLookAndFeel);
-        addAndMakeVisible(*(sliderArray[i]));
+        sliderArray[i]->setTextBoxStyle (juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
+        sliderArray[i]->setLookAndFeel (&resonLookAndFeel);
+        addAndMakeVisible (*(sliderArray[i]));
     };
     
 }
@@ -70,14 +67,14 @@ void ResonatorAudioProcessorEditor::initialiseImageButtons()
 {
     imageButtonArray.clear();
     
-    imageButtonArray.resize(numOfImageButtons);
+    imageButtonArray.resize (numOfImageButtons);
     
-    // github, instagram, linkedin, soundcloud
+    /* images */
     std::array<juce::Image, numOfImageButtons> images {
-        juce::ImageCache::getFromMemory(BinaryData::github_square_black_png, BinaryData::github_square_black_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::linkedin_square_black_png, BinaryData::linkedin_square_black_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::soundcloud_square_black_png, BinaryData::soundcloud_square_black_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::instagram_square_black_png, BinaryData::instagram_square_black_pngSize)
+        juce::ImageCache::getFromMemory (BinaryData::github_square_black_png, BinaryData::github_square_black_pngSize),
+        juce::ImageCache::getFromMemory (BinaryData::linkedin_square_black_png, BinaryData::linkedin_square_black_pngSize),
+        juce::ImageCache::getFromMemory (BinaryData::soundcloud_square_black_png, BinaryData::soundcloud_square_black_pngSize),
+        juce::ImageCache::getFromMemory (BinaryData::instagram_square_black_png, BinaryData::instagram_square_black_pngSize)
     };
     
     juce::StringArray componentIDs {
@@ -92,37 +89,37 @@ void ResonatorAudioProcessorEditor::initialiseImageButtons()
     for (int i = 0; i < imageButtonArray.size(); ++i)
     {
         imageButtonArray[i] = std::make_unique<juce::ImageButton>();
-        imageButtonArray[i]->setImages(false, true, true, images[i], 1.0f, juce::Colours::white.withAlpha(0.75f), images[i], 1.0f, juce::Colours::white.withAlpha(0.25f), images[i], 1.0f, juce::Colours::lightgrey);
-        imageButtonArray[i]->setComponentID(componentIDs[i]);
-        addAndMakeVisible(*imageButtonArray[i]);
-        imageButtonArray[i]->addListener(this);
+        imageButtonArray[i]->setImages (false, true, true, images[i], 1.0f, juce::Colours::white.withAlpha (0.75f), images[i], 1.0f, juce::Colours::white.withAlpha (0.25f), images[i], 1.0f, juce::Colours::lightgrey);
+        imageButtonArray[i]->setComponentID (componentIDs[i]);
+        addAndMakeVisible (*imageButtonArray[i]);
+        imageButtonArray[i]->addListener (this);
     }
 
 }
 
 void ResonatorAudioProcessorEditor::attachParameters()
 {
-    // attach the sliders to the AudioProcessorValueTreeState object
+    /* attach the sliders to the AudioProcessorValueTreeState object */
     sliderAttachments.clear();
-    sliderAttachments.resize(sliderArray.size());
+    sliderAttachments.resize (sliderArray.size());
     
     for (int i = 0; i < sliderArray.size(); ++i)
     {
-        sliderAttachments[i] = std::make_unique<SliderAttachment>(
+        sliderAttachments[i] = std::make_unique<SliderAttachment> (
             audioProcessor.getValueTree(),
              paramData::paramArray[i].getID(),
              *(sliderArray[i])
                                                                   );
     }
     
-    // attach the combobox to the AudioProcessorValueTreeState object
-    algoBoxAttachment = std::make_unique<ComboBoxAttachment>(
+    /* attach the combobox to the AudioProcessorValueTreeState object */
+    algoBoxAttachment = std::make_unique<ComboBoxAttachment> (
          audioProcessor.getValueTree(),
              paramData::paramArray[paramData::algo].getID(),
                  algoBox
                                                              );
-    // attach the bypass button to the AudioProcessorValueTreeState object
-    bypassAttachment = std::make_unique<ButtonAttachment>(
+    /* attach the bypass button to the AudioProcessorValueTreeState object */
+    bypassAttachment = std::make_unique<ButtonAttachment> (
          audioProcessor.getValueTree(),
              paramData::paramArray[paramData::bypass].getID(),
                  bypassButton

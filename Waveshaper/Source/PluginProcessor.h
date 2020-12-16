@@ -69,18 +69,14 @@ public:
     double getGain() const;
     AudioProcessorValueTreeState& accessTreeState();
     
-   
-    
     static String paramGain;
     static String paramSaturation;
     static String paramSymmetry;
     static String paramCrossfade;
     static String paramTransferFunctionListA;
     static String paramTransferFunctionListB;
-    
     static StringArray functions;
     
-
 private:
     double mainGain;
     double targetGain;
@@ -93,8 +89,8 @@ private:
     TransferFunction transferFunction_A; // so far just one
     TransferFunction transferFunction_B;
     
+    /** multichannel dcblock. */
     OwnedArray<DCblock> dcblock;
-    
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveshaperAudioProcessor)

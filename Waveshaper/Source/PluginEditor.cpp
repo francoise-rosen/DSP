@@ -63,8 +63,6 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
     
     functions_B_ComboAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(processor.accessTreeState(), WaveshaperAudioProcessor::paramTransferFunctionListB, functions_B_Combo));
     
-
-    
 }
 
 WaveshaperAudioProcessorEditor::~WaveshaperAudioProcessorEditor()
@@ -88,17 +86,14 @@ void WaveshaperAudioProcessorEditor::paint (Graphics& g)
 {
   
     g.fillAll (Colours::midnightblue.withMultipliedBrightness(0.7));
-               
-    g.setColour(Colours::cornflowerblue);
-    
     auto labelWidth = 70;
     
+    g.setColour(Colours::cornflowerblue);
     g.drawText("Saturation", saturationSlider.getX() + saturationSlider.getWidth()/2 - labelWidth/2, gap, labelWidth, 20,  Justification::centred);
     g.drawText("Symmetry", symmetrySlider.getX() + symmetrySlider.getWidth()/2 - labelWidth/2, getHeight()/1.75 - labelWidth/4 + gap, labelWidth, 20, Justification::centred);
     g.drawText("Gain", gainSlider.getX() + gainSlider.getWidth()/2 - labelWidth/2, gainSlider.getY() - labelWidth/4, labelWidth, 20, Justification::centred);
     
     g.setColour(Colours::yellow);
-    
     Rectangle<float> area (gap, gap, getWidth()/4, getHeight() - gap - gap);
     area.withTrimmedLeft(10);
     g.drawRect(area);
@@ -111,18 +106,14 @@ void WaveshaperAudioProcessorEditor::paint (Graphics& g)
     auto crossArea = getLocalBounds().removeFromTop(getHeight()/2).removeFromRight(getWidth() * 3 / 4).reduced(gap);
     g.drawRect(crossArea);
     
-    
-
 }
 
 void WaveshaperAudioProcessorEditor::resized()
 {
-    
     auto gainArea = getLocalBounds().removeFromRight(getWidth()/4).removeFromBottom(getHeight()/2);
     auto modArea = getLocalBounds().removeFromLeft(getWidth()/4);
     auto crossfadeArea = getLocalBounds().removeFromTop(getHeight()/2).removeFromRight(getWidth() * 3 / 4);
-    
-    
+
     saturationSlider.setBounds(modArea.removeFromTop(getHeight()/1.75).reduced(gap));
     symmetrySlider.setBounds(modArea.reduced(gap));
     
@@ -133,7 +124,6 @@ void WaveshaperAudioProcessorEditor::resized()
     auto comboArea = crossfadeArea.reduced(gap, 0).removeFromTop(crossfadeArea.getHeight() * 2 / 3);
     functions_A_Combo.setBounds(comboArea.removeFromLeft(getWidth()/4).reduced(gap));
     functions_B_Combo.setBounds(comboArea.removeFromRight(getWidth()/4).reduced(gap));
-    
     
 }
 
